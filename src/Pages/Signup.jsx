@@ -4,6 +4,8 @@ import logo from "../assets/playtube1.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { serverUrl } from "../App";
+import toast from "react-hot-toast";
+import { ClipLoader } from "react-spinners";
 
 const Signup = () => {
   const [step, setStep] = useState(1);
@@ -21,17 +23,17 @@ const Signup = () => {
   const handleNext = () => {
     if (step === 1) {
       if (!userName || !email) {
-        alert("Fill all the fields");
+        toast.error("Fill all the fields");
         return;
       }
     }
     if (step === 2) {
       if (!password || !confirmPassword) {
-        alert("Fill all the fields");
+        toast.error("Fill all the fields");
         return;
       }
       if (password !== confirmPassword) {
-        alert("Password and ConfirmPassword don't match");
+        toast.error("Password and ConfirmPassword don't match");
         return;
       }
     }
@@ -65,11 +67,9 @@ const Signup = () => {
     }
   };
 
-  console.log(`${serverUrl}/api/v1/signup`);
-
   const handleSignUp = async () => {
     if (!backendImage) {
-      alert("Please choose profile image");
+      toast.error("Please choose profile image");
       return;
     }
 
@@ -89,9 +89,12 @@ const Signup = () => {
         }
       );
 
-      console.log(data);
+      navigate("/");
+
+      toast.success(data.message);
     } catch (error) {
       console.log(error);
+      toast.error("Error in Signing Up");
     } finally {
       setLoading(false);
     }
