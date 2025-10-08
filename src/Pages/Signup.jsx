@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FaArrowLeft, FaUserCircle } from "react-icons/fa";
 import logo from "../assets/playtube1.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { serverUrl } from "../App";
 
 const Signup = () => {
   const [step, setStep] = useState(1);
@@ -12,6 +14,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [backendImage, setBackendImage] = useState(null);
   const [frontendImage, setFrontendImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -59,6 +62,38 @@ const Signup = () => {
     if (file) {
       setBackendImage(file);
       setFrontendImage(URL.createObjectURL(file));
+    }
+  };
+
+  console.log(`${serverUrl}/api/v1/signup`);
+
+  const handleSignUp = async () => {
+    if (!backendImage) {
+      alert("Please choose profile image");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("userName", userName);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("photoUrl", backendImage);
+    try {
+      setLoading(true);
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/signup`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -198,12 +233,15 @@ const Signup = () => {
 
             <div className="flex justify-end">
               <button
-                // onClick={handleCreateAccount}
-                // disabled={loading}
+                disabled={loading}
                 className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full"
+                onClick={handleSignUp}
               >
-                {/* {loading ? <ClipLoader size={20} color="white" /> : "Create Account"} */}
-                Create Account
+                {loading ? (
+                  <ClipLoader size={20} color="white" />
+                ) : (
+                  "Create Account"
+                )}
               </button>
             </div>
           </>
