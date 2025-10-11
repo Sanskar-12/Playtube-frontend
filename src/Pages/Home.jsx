@@ -16,7 +16,7 @@ import { MdOutlineSubscriptions } from "react-icons/md";
 import logo from "../assets/playtube1.png";
 import { useState } from "react";
 import SidebarItem from "../components/sidebarItem";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import MobileNav from "../components/MobileNav";
 import { categories } from "../utils";
 
@@ -26,6 +26,7 @@ const Home = () => {
   const [selectedItem, setSelectedItem] = useState("Home");
   const [active, setActive] = useState("Home");
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <div className="bg-[#0f0f0f] text-white min-h-screen relative">
@@ -96,7 +97,7 @@ const Home = () => {
             open={sidebarOpen}
             onClick={() => {
               setSelectedItem("Home");
-              // navigate("/");
+              navigate("/");
             }}
             selected={selectedItem === "Home"}
           />
@@ -107,7 +108,7 @@ const Home = () => {
             selected={selectedItem === "Shorts"}
             onClick={() => {
               setSelectedItem("Shorts");
-              // navigate("/shorts");
+              navigate("/shorts");
             }}
           />
           <SidebarItem
@@ -183,15 +184,21 @@ const Home = () => {
           sidebarOpen ? "md:ml-60" : "md:ml-20"
         }`}
       >
-        <div className="flex items-center gap-3 overflow-x-auto hover:scrollbar-auto scrollbar-none pt-2 mt-[60px]">
-          {categories.map((category, index) => (
-            <button
-              key={index}
-              className="whitespace-nowrap bg-[#272727] px-4 py-1 rounded-lg text-sm hover:bg-gray-700"
-            >
-              {category}
-            </button>
-          ))}
+        {location.pathname === "/" && (
+          <div className="flex items-center gap-3 overflow-x-auto hover:scrollbar-auto scrollbar-none pt-2 mt-[60px]">
+            {categories.map((category, index) => (
+              <button
+                key={index}
+                className="whitespace-nowrap bg-[#272727] px-4 py-1 rounded-lg text-sm hover:bg-gray-700"
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-2">
+          <Outlet />
         </div>
       </main>
 
