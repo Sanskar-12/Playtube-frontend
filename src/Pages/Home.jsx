@@ -1,9 +1,28 @@
-import { FaBars, FaMicrophone, FaSearch, FaUserCircle } from "react-icons/fa";
+import {
+  FaBars,
+  FaUserCircle,
+  FaHome,
+  FaHistory,
+  FaList,
+  FaThumbsUp,
+  FaSearch,
+  FaMicrophone,
+  FaTimes,
+} from "react-icons/fa";
+import { IoIosAddCircle } from "react-icons/io";
+import { GoVideo } from "react-icons/go";
+import { SiYoutubeshorts } from "react-icons/si";
+import { MdOutlineSubscriptions } from "react-icons/md";
 import logo from "../assets/playtube1.png";
 import { useState } from "react";
+import SidebarItem from "../components/sidebarItem";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [input, setInput] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [selectedItem, setSelectedItem] = useState("Home");
+  const navigate = useNavigate();
 
   return (
     <div className="bg-[#0f0f0f] text-white min-h-screen relative">
@@ -14,7 +33,10 @@ const Home = () => {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button className="text-xl bg-[#272727] p-2 rounded-full md:inline hidden">
+            <button
+              className="text-xl bg-[#272727] p-2 rounded-full md:inline hidden"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
               <FaBars />
             </button>
             <div className="flex items-center gap-[5px]">
@@ -55,6 +77,102 @@ const Home = () => {
           </div>
         </div>
       </header>
+
+      {/* sidebar */}
+      <aside
+        className={`bg-[#0f0f0f] border-r border-gray-800 transition-all duration-300 fixed top-[60px] bottom-0 z-40
+          ${
+            sidebarOpen ? "w-60" : "w-20"
+          } hidden md:flex flex-col overflow-y-auto`}
+      >
+        {/* general */}
+        <nav className="space-y-1 mt-3">
+          <SidebarItem
+            icon={<FaHome />}
+            text={"Home"}
+            open={sidebarOpen}
+            onClick={() => {
+              setSelectedItem("Home");
+              // navigate("/");
+            }}
+            selected={selectedItem === "Home"}
+          />
+          <SidebarItem
+            icon={<SiYoutubeshorts />}
+            text="Shorts"
+            open={sidebarOpen}
+            selected={selectedItem === "Shorts"}
+            onClick={() => {
+              setSelectedItem("Shorts");
+              // navigate("/shorts");
+            }}
+          />
+          <SidebarItem
+            icon={<MdOutlineSubscriptions />}
+            text="Subscriptions"
+            open={sidebarOpen}
+            selected={selectedItem === "Subscriptions"}
+            onClick={() => {
+              setSelectedItem("Subscriptions");
+              // navigate("/subscribepage");
+            }}
+          />
+        </nav>
+
+        <hr className="border-gray-800 my-3" />
+        {sidebarOpen && <p className="text-sm text-gray-400 px-2">You</p>}
+
+        {/* You */}
+        <nav className="space-y-1 mt-1">
+          <SidebarItem
+            icon={<FaHistory />}
+            text="History"
+            open={sidebarOpen}
+            selected={selectedItem === "History"}
+            onClick={() => {
+              setSelectedItem("History");
+              // navigate("/history");
+            }}
+          />
+          <SidebarItem
+            icon={<FaList />}
+            text="Playlists"
+            open={sidebarOpen}
+            selected={selectedItem === "Playlists"}
+            onClick={() => {
+              setSelectedItem("Playlists");
+              // navigate("/saveplaylist");
+            }}
+          />
+          <SidebarItem
+            icon={<GoVideo />}
+            text="Save videos"
+            open={sidebarOpen}
+            selected={selectedItem === "Save videos"}
+            onClick={() => {
+              setSelectedItem("Save videos");
+              // navigate("/savevideos");
+            }}
+          />
+          <SidebarItem
+            icon={<FaThumbsUp />}
+            text="Liked videos"
+            open={sidebarOpen}
+            selected={selectedItem === "Liked videos"}
+            onClick={() => {
+              setSelectedItem("Liked videos");
+              // navigate("/likedvideos");
+            }}
+          />
+        </nav>
+        <hr className="border-gray-800 my-3" />
+
+        {sidebarOpen && (
+          <p className="text-sm text-gray-400 px-2">Subscriptions</p>
+        )}
+
+        {/* Subscriptions */}
+      </aside>
     </div>
   );
 };
