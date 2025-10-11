@@ -17,11 +17,13 @@ import logo from "../assets/playtube1.png";
 import { useState } from "react";
 import SidebarItem from "../components/sidebarItem";
 import { useNavigate } from "react-router-dom";
+import MobileNav from "../components/MobileNav";
 
 const Home = () => {
   const [input, setInput] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedItem, setSelectedItem] = useState("Home");
+  const [active, setActive] = useState("Home");
   const navigate = useNavigate();
 
   return (
@@ -173,6 +175,52 @@ const Home = () => {
 
         {/* Subscriptions */}
       </aside>
+
+      {/* Main area */}
+
+      {/* Bottom Nav */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0f0f0f] border-t border-gray-800 flex justify-around py-2 z-10">
+        <MobileNav
+          active={active === "Home"}
+          icon={<FaHome />}
+          text={"Home"}
+          onClick={() => {
+            setActive("Home");
+            // navigate("/");
+          }}
+        />
+        <MobileNav
+          icon={<SiYoutubeshorts />}
+          active={active === "Shorts"}
+          text="Shorts"
+          onClick={() => {
+            setActive("Shorts");
+            // navigate("/shorts");
+          }}
+        />
+        <MobileNav
+          icon={<IoIosAddCircle />}
+          active={active === "+"}
+          onClick={() => {
+            setActive("+");
+            // navigate("/shorts");
+          }}
+        />
+        <MobileNav
+          icon={<MdOutlineSubscriptions />}
+          active={active === "Subscriptions"}
+          onClick={() => {
+            setActive("Subscriptions");
+            // navigate("/subscribepage");
+          }}
+          text="Subscriptions"
+        />
+        <MobileNav
+          onClick={() => navigate("/mobileprofile")}
+          icon={<FaUserCircle />}
+          text="You"
+        />
+      </nav>
     </div>
   );
 };
