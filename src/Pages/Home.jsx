@@ -18,6 +18,7 @@ import { useState } from "react";
 import SidebarItem from "../components/sidebarItem";
 import { useNavigate } from "react-router-dom";
 import MobileNav from "../components/MobileNav";
+import { categories } from "../utils";
 
 const Home = () => {
   const [input, setInput] = useState("");
@@ -177,6 +178,22 @@ const Home = () => {
       </aside>
 
       {/* Main area */}
+      <main
+        className={`overflow-y-auto p-4 flex flex-col pb-16 transition-all duration-300 ${
+          sidebarOpen ? "md:ml-60" : "md:ml-20"
+        }`}
+      >
+        <div className="flex items-center gap-3 overflow-x-auto hover:scrollbar-auto scrollbar-none pt-2 mt-[60px]">
+          {categories.map((category, index) => (
+            <button
+              key={index}
+              className="whitespace-nowrap bg-[#272727] px-4 py-1 rounded-lg text-sm hover:bg-gray-700"
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </main>
 
       {/* Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0f0f0f] border-t border-gray-800 flex justify-around py-2 z-10">
