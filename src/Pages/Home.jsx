@@ -29,6 +29,7 @@ const Home = () => {
   const [active, setActive] = useState("Home");
   const navigate = useNavigate();
   const location = useLocation();
+  const [popup, setPopup] = useState(false);
 
   const { user } = useSelector((state) => state.user);
 
@@ -87,9 +88,13 @@ const Home = () => {
                 src={user?.photoUrl}
                 alt="img"
                 className="w-9 h-9 rounded-full object-cover border-1 border-gray-700 hidden md:flex"
+                onClick={() => setPopup((prev) => !prev)}
               />
             ) : (
-              <FaUserCircle className="text-3xl hidden md:flex text-gray-400" />
+              <FaUserCircle
+                className="text-3xl hidden md:flex text-gray-400"
+                onClick={() => setPopup((prev) => !prev)}
+              />
             )}
             <FaSearch className="text-lg md:hidden flex" />
           </div>
@@ -210,7 +215,7 @@ const Home = () => {
             ))}
           </div>
         )}
-        <Profile />
+        {popup && <Profile />}
 
         <div className="mt-2">
           <Outlet />
@@ -259,9 +264,9 @@ const Home = () => {
           icon={
             user && user?.photoUrl ? (
               <img
-                src={user?.photoUrl}
+                src={user.photoUrl}
                 alt="img"
-                className="w-9 h-9 rounded-full object-cover border-1 border-gray-700 hidden md:flex"
+                className="w-9 h-9 rounded-full object-cover border border-gray-700"
               />
             ) : (
               <FaUserCircle />
