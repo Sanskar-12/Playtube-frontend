@@ -151,7 +151,7 @@ const Signin = () => {
             <div className="flex justify-between items-center  mt-10">
               <button
                 className="text-blue-400 text-sm hover:underline"
-                onClick={() => navigate("/forgetpassword")}
+                onClick={() => navigate("/forgetpass")}
               >
                 Forgot password?
               </button>

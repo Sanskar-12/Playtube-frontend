@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import Shorts from "./Pages/Shorts/Shorts";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
 import MobileProfile from "./components/MobileProfile";
+import ForgetPassword from "./Pages/ForgetPassword";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -20,6 +21,7 @@ const App = () => {
         </Route>
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgetpass" element={<ForgetPassword />} />
       </Routes>
       <Toaster />
     </>
