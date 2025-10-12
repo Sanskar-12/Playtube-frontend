@@ -6,6 +6,8 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { FaArrowLeft, FaUserCircle } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/reducers/userSlice";
 
 const Signin = () => {
   const [step, setStep] = useState(1);
@@ -15,6 +17,7 @@ const Signin = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNext = () => {
     if (step === 1) {
@@ -53,6 +56,8 @@ const Signin = () => {
           withCredentials: true,
         }
       );
+
+      dispatch(setUser(data.user));
 
       navigate("/");
 
@@ -143,7 +148,7 @@ const Signin = () => {
                 Show Password
               </label>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-between items-center  mt-10">
               <button
                 className="text-blue-400 text-sm hover:underline"
                 onClick={() => navigate("/forgetpassword")}

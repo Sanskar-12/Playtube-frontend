@@ -1,10 +1,34 @@
-import { useSelector } from "react-redux";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { serverUrl } from "../App";
+import { setUser } from "../redux/reducers/userSlice";
+import { FcGoogle } from "react-icons/fc";
+import { TiUserAddOutline } from "react-icons/ti";
+import { MdOutlineSwitchAccount } from "react-icons/md";
+import { SiYoutubestudio } from "react-icons/si";
+import { FiLogOut } from "react-icons/fi";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSignOut = async () => {
+    try {
+      const { data } = await axios.get(`${serverUrl}/api/v1/logout`, {
+        withCredentials: true,
+      });
+
+      dispatch(setUser(null));
+      toast.success(data.message);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error in SignOut");
+    }
+  };
   return (
     <div>
       <div className="absolute right-5 top-10 mt-2 w-72 bg-[#212121] text-white rounded-xl shadow-lg z-50">

@@ -6,6 +6,8 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
+import { setUser } from "../redux/reducers/userSlice";
+import { useDispatch } from "react-redux";
 
 const Signup = () => {
   const [step, setStep] = useState(1);
@@ -19,6 +21,7 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNext = () => {
     if (step === 1) {
@@ -89,6 +92,8 @@ const Signup = () => {
         }
       );
 
+      console.log(data);
+      dispatch(setUser(data.user));
       navigate("/");
 
       toast.success(data.message);
