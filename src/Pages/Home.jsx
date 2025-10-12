@@ -230,7 +230,7 @@ const Home = () => {
           text={"Home"}
           onClick={() => {
             setActive("Home");
-            // navigate("/");
+            navigate("/");
           }}
         />
         <MobileNav

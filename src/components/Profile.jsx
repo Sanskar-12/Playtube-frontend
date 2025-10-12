@@ -35,7 +35,6 @@ const Profile = () => {
   const handleAuthWithGoogle = async () => {
     try {
       const response = await signInWithPopup(auth, provider);
-      console.log(response);
 
       const formData = new FormData();
 
