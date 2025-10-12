@@ -19,6 +19,8 @@ import SidebarItem from "../components/sidebarItem";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import MobileNav from "../components/MobileNav";
 import { categories } from "../utils";
+import { useSelector } from "react-redux";
+import Profile from "../components/Profile";
 
 const Home = () => {
   const [input, setInput] = useState("");
@@ -27,6 +29,8 @@ const Home = () => {
   const [active, setActive] = useState("Home");
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { user } = useSelector((state) => state.user);
 
   return (
     <div className="bg-[#0f0f0f] text-white min-h-screen relative">
@@ -72,11 +76,21 @@ const Home = () => {
 
           {/* right */}
           <div className="flex items-center gap-3">
-            <button className="hidden md:flex items-center gap-1 bg-[#272727] px-3 py-1 rounded-full">
-              <span className="text-lg">+</span>
-              <span>Create</span>
-            </button>
-            <FaUserCircle className="text-3xl hidden md:flex text-gray-400" />
+            {user?.channel && (
+              <button className="hidden md:flex items-center gap-1 bg-[#272727] px-3 py-1 rounded-full">
+                <span className="text-lg">+</span>
+                <span>Create</span>
+              </button>
+            )}
+            {user && user?.photoUrl ? (
+              <img
+                src={user?.photoUrl}
+                alt="img"
+                className="w-9 h-9 rounded-full object-cover border-1 border-gray-700 hidden md:flex"
+              />
+            ) : (
+              <FaUserCircle className="text-3xl hidden md:flex text-gray-400" />
+            )}
             <FaSearch className="text-lg md:hidden flex" />
           </div>
         </div>
@@ -196,6 +210,7 @@ const Home = () => {
             ))}
           </div>
         )}
+        <Profile />
 
         <div className="mt-2">
           <Outlet />
@@ -241,7 +256,17 @@ const Home = () => {
         />
         <MobileNav
           onClick={() => navigate("/mobileprofile")}
-          icon={<FaUserCircle />}
+          icon={
+            user && user?.photoUrl ? (
+              <img
+                src={user?.photoUrl}
+                alt="img"
+                className="w-9 h-9 rounded-full object-cover border-1 border-gray-700 hidden md:flex"
+              />
+            ) : (
+              <FaUserCircle />
+            )
+          }
           text="You"
         />
       </nav>
