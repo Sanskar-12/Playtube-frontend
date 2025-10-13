@@ -2,9 +2,12 @@ import { useState } from "react";
 import logo from "../assets/playtube1.png";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { serverUrl } from "../App";
 
 const ForgetPassword = () => {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -14,13 +17,64 @@ const ForgetPassword = () => {
   const navigate = useNavigate();
 
   //   Step 1
-  const sendOtp = () => {};
+  const sendOtp = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/sendotp`,
+        { email },
+        { withCredentials: true }
+      );
+
+      toast.success(data.message);
+      setStep(step + 1);
+    } catch (error) {
+      console.log(error);
+      toast.error("Sending OTP failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   //   Step 2
-  const verifyOTP = () => {};
+  const verifyOTP = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/verifyotp`,
+        { email, otp },
+        { withCredentials: true }
+      );
+
+      toast.success(data.message);
+      setStep(step + 1);
+    } catch (error) {
+      console.log(error);
+      toast.error("OTP verification failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   //   Step 3
-  const resetPassword = () => {};
+  const resetPassword = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/resetpassword`,
+        { email, password: newPassword },
+        { withCredentials: true }
+      );
+
+      toast.success(data.message);
+      navigate("/signin");
+    } catch (error) {
+      console.log(error);
+      toast.error("Reset Password failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#202124] text-white">
