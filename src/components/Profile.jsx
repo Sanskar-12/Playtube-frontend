@@ -71,7 +71,14 @@ const Profile = () => {
             <div>
               <h4 className="font-semibold">{user?.userName}</h4>
               <p className="text-sm text-gray-400">{user?.email}</p>
-              <p className="text-sm text-blue-400 cursor-pointer hover:underline">
+              <p
+                className="text-sm text-blue-400 cursor-pointer hover:underline"
+                onClick={() => {
+                  user?.channel
+                    ? navigate("/viewchannel")
+                    : navigate("/createchannel");
+                }}
+              >
                 {user?.channel ? "View Channel" : "Create Channel"}
               </p>
             </div>

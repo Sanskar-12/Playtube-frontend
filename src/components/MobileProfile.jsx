@@ -80,14 +80,9 @@ const MobileProfile = () => {
             <p
               className="text-sm text-blue-400 cursor-pointer hover:underline"
               onClick={() => {
-                if (user?.channel) {
-                  // Go to channel page
-                  navigate("/viewchannel");
-                  // navigate(`/channel/${user.channel._id}`);
-                } else {
-                  // Go to create channel flow
-                  navigate("/createchannel");
-                }
+                user?.channel
+                  ? navigate("/viewchannel")
+                  : navigate("/createchannel");
               }}
             >
               {user?.channel ? "View Channel" : "Create Channel"}
