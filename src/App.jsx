@@ -9,11 +9,13 @@ import MobileProfile from "./components/MobileProfile";
 import ForgetPassword from "./Pages/ForgetPassword";
 import CreateChannel from "./Pages/Channel/CreateChannel";
 import ViewChannel from "./Pages/Channel/ViewChannel";
+import useGetCurrentChannel from "./hooks/useGetCurrentChannel";
 
 export const serverUrl = "http://localhost:4000";
 
 const App = () => {
   useGetCurrentUser();
+  useGetCurrentChannel();
   return (
     <>
       <Routes>
