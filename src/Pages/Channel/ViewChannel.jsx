@@ -37,7 +37,10 @@ const ViewChannel = () => {
           </p>
 
           <div className="flex gap-4 mt-4">
-            <button className="bg-white text-black px-4 py-1 rounded-full font-medium cursor-pointer active:bg-gray-900 active:text-white">
+            <button
+              className="bg-white text-black px-4 py-1 rounded-full font-medium cursor-pointer active:bg-gray-900 active:text-white"
+              onClick={() => navigate("/updatechannel")}
+            >
               Customise Channel
             </button>
 

@@ -10,6 +10,7 @@ import ForgetPassword from "./Pages/ForgetPassword";
 import CreateChannel from "./Pages/Channel/CreateChannel";
 import ViewChannel from "./Pages/Channel/ViewChannel";
 import useGetCurrentChannel from "./hooks/useGetCurrentChannel";
+import UpdateChannel from "./Pages/Channel/UpdateChannel";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/shorts" element={<Shorts />} />
           <Route path="/mobileprofile" element={<MobileProfile />} />
           <Route path="/viewchannel" element={<ViewChannel />} />
+          <Route path="/updatechannel" element={<UpdateChannel />} />
         </Route>
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />

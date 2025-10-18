@@ -1,26 +1,25 @@
-import { useDispatch, useSelector } from "react-redux";
-import logo from "../../assets/playtube1.png";
-import { FaUserCircle } from "react-icons/fa";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { IoIosArrowForward } from "react-icons/io";
+import { FaUserCircle } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
-import toast from "react-hot-toast";
+import { IoIosArrowForward } from "react-icons/io";
 import axios from "axios";
 import { serverUrl } from "../../App";
+import toast from "react-hot-toast";
 import { setChannelData } from "../../redux/reducers/userSlice";
 
-const CreateChannel = () => {
-  const user = useSelector((state) => state.user);
+const UpdateChannel = () => {
+  const { channelData } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [step, setStep] = useState(1);
   const [avatar, setAvatar] = useState(null);
   const [banner, setBanner] = useState(null);
-  const [channelName, setChannelName] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+  const [channelName, setChannelName] = useState(channelData?.name);
+  const [description, setDescription] = useState(channelData?.description);
+  const [category, setCategory] = useState(channelData?.category);
   const [loading, setLoading] = useState(false);
 
   const handleAvatarChange = (e) => {
@@ -38,7 +37,7 @@ const CreateChannel = () => {
     setStep((prev) => prev - 1);
   };
 
-  const handleCreateChannel = async () => {
+  const handleUpdateChannel = async () => {
     const formData = new FormData();
 
     formData.append("name", channelName);
@@ -50,8 +49,8 @@ const CreateChannel = () => {
     setLoading(true);
 
     try {
-      const { data } = await axios.post(
-        `${serverUrl}/api/v1/create/channel`,
+      const { data } = await axios.put(
+        `${serverUrl}/api/v1/update/channel`,
         formData,
         {
           withCredentials: true,
@@ -59,11 +58,11 @@ const CreateChannel = () => {
       );
 
       toast.success(data.message);
-      dispatch(setChannelData(data.channel));
+      dispatch(setChannelData(data.updatedChannel));
       navigate("/");
     } catch (error) {
       console.log(error);
-      toast.error("Error in Creating Channel");
+      toast.error("Error in Updating Channel");
     } finally {
       setLoading(false);
     }
@@ -71,26 +70,12 @@ const CreateChannel = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#0f0f0f] text-white flex flex-col">
-      <header className="flex justify-between items-center px-6 py-3 border-b border-gray-800">
-        <div className="flex items-center gap-2">
-          <img src={logo} alt="logo" className="w-8 h-8 object-cover" />
-          <span className="text-xl font-bold font-roboto">PlayTube</span>
-        </div>
-        <div className="flex items-center gap-3">
-          {!user?.photoUrl ? (
-            <FaUserCircle className="text-3xl cursor-pointer" />
-          ) : (
-            <img src={user?.photoUrl} className="w-9 h-9 rounded-full" />
-          )}
-        </div>
-      </header>
-
       <main className="flex flex-1 justify-center items-center px-4">
         <div className="bg-[#212121] p-6 rounded-xl w-full max-w-lg shadow-lg">
           {/* Step 1 */}
           {step === 1 && (
             <>
-              <h2 className="text-2xl font-semibold mb-4">How you’ll appear</h2>
+              <h2 className="text-2xl font-semibold mb-4">Customise Channel</h2>
               <p className="text-sm text-gray-400 mb-6">
                 Choose a profile picture, channel name.
               </p>
@@ -154,7 +139,9 @@ const CreateChannel = () => {
           {/* Step 2 */}
           {step === 2 && (
             <>
-              <h2 className="text-2xl font-semibold mb-4">Your Channel</h2>
+              <h2 className="text-2xl font-semibold mb-4">
+                Your Updated Channel
+              </h2>
               <div className="flex flex-col items-center mb-6">
                 {avatar ? (
                   <img
@@ -175,7 +162,7 @@ const CreateChannel = () => {
                   onClick={nextStep}
                   className="flex w-full items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 py-3 rounded-lg"
                 >
-                  Continue and Create Channel <IoIosArrowForward size={20} />
+                  Continue and Customise Channel <IoIosArrowForward size={20} />
                 </button>
               </div>
 
@@ -191,7 +178,7 @@ const CreateChannel = () => {
           {/* Step 3 */}
           {step === 3 && (
             <>
-              <h2 className="text-2xl font-semibold mb-4">Create Channel</h2>
+              <h2 className="text-2xl font-semibold mb-4">Customise Channel</h2>
               {/* Banner Upload */}
               <label
                 htmlFor="banner-upload"
@@ -243,11 +230,15 @@ const CreateChannel = () => {
                   Back
                 </button>
                 <button
-                  onClick={handleCreateChannel}
+                  onClick={handleUpdateChannel}
                   disabled={loading}
                   className="bg-blue-600 hover:bg-blue-700 py-3 px-5 rounded-lg"
                 >
-                  {loading ? <ClipLoader size={20} color="white" /> : "Save"}
+                  {loading ? (
+                    <ClipLoader size={20} color="white" />
+                  ) : (
+                    "Save and Customise Channel"
+                  )}
                 </button>
               </div>
             </>
@@ -258,4 +249,4 @@ const CreateChannel = () => {
   );
 };
 
-export default CreateChannel;
+export default UpdateChannel;
