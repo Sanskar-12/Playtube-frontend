@@ -1,7 +1,10 @@
 import { useSelector } from "react-redux";
+import create from "../../assets/create.png";
+import { useNavigate } from "react-router-dom";
 
 const ViewChannel = () => {
   const { channelData } = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col gap-3">
@@ -16,6 +19,49 @@ const ViewChannel = () => {
         ) : (
           <div className="w-full h-full bg-gradient-to-r from-gray-800 to-gray-900"></div>
         )}
+      </div>
+
+      {/* Main content */}
+      <div className="px-10 py-8">
+        <div className="flex flex-col items-center">
+          <img
+            src={channelData?.avatar}
+            alt="avatar"
+            className="w-28 h-28 rounded-full object-cover border-4 border-gray-500"
+          />
+          <h1 className="text-2xl font-bold mt-3">{channelData?.name}</h1>
+          <p className="text-gray-400">{channelData?.owner?.email}</p>
+          <p className="text-sm text-gray-400 mt-1">
+            More about this channel...{" "}
+            <span className="text-blue-400">{channelData?.category}</span>
+          </p>
+
+          <div className="flex gap-4 mt-4">
+            <button className="bg-white text-black px-4 py-1 rounded-full font-medium cursor-pointer active:bg-gray-900 active:text-white">
+              Customise Channel
+            </button>
+
+            <button className="bg-[#272727] px-4 py-1 rounded-full font-medium cursor-pointer active:bg-gray-200 active:text-black">
+              Manage Videos
+            </button>
+          </div>
+        </div>
+
+        {/* Create Content */}
+        <div className="flex flex-col items-center mt-16">
+          <img src={create} alt="Create" className="w-20" />
+          <p className="mt-4 font-medium">Create content on any device</p>
+          <p className="text-gray-400 text-sm text-center">
+            Upload and record at home or on the go. Everything you make public
+            will appear here.
+          </p>
+          <button
+            className="bg-white text-black mt-4 px-5 py-1 rounded-full font-medium"
+            onClick={() => navigate("/createpage")}
+          >
+            + Create
+          </button>
+        </div>
       </div>
     </div>
   );
