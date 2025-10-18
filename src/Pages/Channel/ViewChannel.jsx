@@ -60,7 +60,7 @@ const ViewChannel = () => {
           </p>
           <button
             className="bg-white text-black mt-4 px-5 py-1 rounded-full font-medium"
-            onClick={() => navigate("/createpage")}
+            onClick={() => navigate("/create")}
           >
             + Create
           </button>

@@ -78,7 +78,10 @@ const Home = () => {
           {/* right */}
           <div className="flex items-center gap-3">
             {user?.channel && (
-              <button className="hidden md:flex items-center gap-1 bg-[#272727] px-3 py-1 rounded-full">
+              <button
+                className="hidden md:flex items-center gap-1 bg-[#272727] px-3 py-1 rounded-full"
+                onClick={() => navigate("/create")}
+              >
                 <span className="text-lg">+</span>
                 <span>Create</span>
               </button>
@@ -239,7 +242,7 @@ const Home = () => {
           text="Shorts"
           onClick={() => {
             setActive("Shorts");
-            // navigate("/shorts");
+            navigate("/shorts");
           }}
         />
         <MobileNav
@@ -247,7 +250,7 @@ const Home = () => {
           active={active === "+"}
           onClick={() => {
             setActive("+");
-            // navigate("/shorts");
+            navigate("/create");
           }}
         />
         <MobileNav
