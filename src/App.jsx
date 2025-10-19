@@ -13,6 +13,10 @@ import useGetCurrentChannel from "./hooks/useGetCurrentChannel";
 import UpdateChannel from "./Pages/Channel/UpdateChannel";
 import { useSelector } from "react-redux";
 import CreatePage from "./Pages/CreatePage";
+import CreateVideo from "./Pages/Video/CreateVideo";
+import CreatePost from "./Pages/Post/CreatePost";
+import CreatePlaylist from "./Pages/Playlist/CreatePlaylist";
+import CreateShorts from "./Pages/Shorts/CreateShorts";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -77,6 +81,38 @@ const App = () => {
             element={
               <ProtectRoute userData={user}>
                 <CreatePage />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/create-video"
+            element={
+              <ProtectRoute userData={user}>
+                <CreateVideo />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/create-post"
+            element={
+              <ProtectRoute userData={user}>
+                <CreatePost />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/create-playlist"
+            element={
+              <ProtectRoute userData={user}>
+                <CreatePlaylist />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/create-short"
+            element={
+              <ProtectRoute userData={user}>
+                <CreateShorts />
               </ProtectRoute>
             }
           />
