@@ -1,13 +1,16 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
 import { serverUrl } from "../../App";
 import { useNavigate } from "react-router-dom";
+import { setAllVideosData } from "../../redux/reducers/contentSlice";
+import { setChannelData } from "../../redux/reducers/userSlice";
 
 const CreateVideo = () => {
   const { channelData } = useSelector((state) => state.user);
+  const { allVideosData } = useSelector((state) => state.content);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -17,6 +20,7 @@ const CreateVideo = () => {
   const [thumbnail, setThumbnail] = useState(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleVideoChange = (e) => {
     setVideo(e.target.files[0]);
@@ -54,7 +58,13 @@ const CreateVideo = () => {
         }
       );
 
-      console.log(data);
+      dispatch(setAllVideosData([...allVideosData, data.newVideo]));
+      dispatch(
+        setChannelData({
+          ...channelData,
+          videos: [...(channelData.videos || []), data.newVideo],
+        })
+      );
 
       navigate("/");
       toast.success("Video Published Successfully");

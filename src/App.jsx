@@ -17,6 +17,7 @@ import CreateVideo from "./Pages/Video/CreateVideo";
 import CreatePost from "./Pages/Post/CreatePost";
 import CreatePlaylist from "./Pages/Playlist/CreatePlaylist";
 import CreateShorts from "./Pages/Shorts/CreateShorts";
+import useGetAllContentData from "./hooks/useGetAllContentData";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -40,6 +41,7 @@ const App = () => {
 
   useGetCurrentUser();
   useGetCurrentChannel();
+  useGetAllContentData();
   return (
     <>
       <Routes>

@@ -1,14 +1,17 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { serverUrl } from "../../App";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import { setAllShortsData } from "../../redux/reducers/contentSlice";
+import { setChannelData } from "../../redux/reducers/userSlice";
 
 const CreateShorts = () => {
   const { channelData } = useSelector((state) => state.user);
+  const { allShortsData } = useSelector((state) => state.content);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -17,6 +20,7 @@ const CreateShorts = () => {
   const [video, setVideo] = useState(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handlePublish = async () => {
     if (!video || !title) {
@@ -45,7 +49,13 @@ const CreateShorts = () => {
         }
       );
 
-      console.log(data);
+      dispatch(setAllShortsData([...allShortsData, data.newShort]));
+      dispatch(
+        setChannelData({
+          ...channelData,
+          shorts: [...(channelData.shorts || []), data.newShort],
+        })
+      );
 
       navigate("/");
       toast.success("Shorts Published Successfully");
