@@ -49,7 +49,7 @@ const CreateShorts = () => {
         }
       );
 
-      dispatch(setAllShortsData([...allShortsData, data.newShort]));
+      dispatch(setAllShortsData([data.newShort, ...allShortsData]));
       dispatch(
         setChannelData({
           ...channelData,

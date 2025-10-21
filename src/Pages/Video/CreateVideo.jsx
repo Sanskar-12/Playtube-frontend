@@ -58,7 +58,7 @@ const CreateVideo = () => {
         }
       );
 
-      dispatch(setAllVideosData([...allVideosData, data.newVideo]));
+      dispatch(setAllVideosData([data.newVideo, ...allVideosData]));
       dispatch(
         setChannelData({
           ...channelData,

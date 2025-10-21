@@ -22,6 +22,7 @@ import { categories } from "../utils";
 import { useSelector } from "react-redux";
 import Profile from "../components/Profile";
 import AllVideosPage from "../components/AllVideosPage";
+import AllShortsPage from "../components/AllShortsPage";
 
 const Home = () => {
   const [input, setInput] = useState("");
@@ -221,6 +222,7 @@ const Home = () => {
             </div>
             <div className="mt-3">
               <AllVideosPage />
+              <AllShortsPage />
             </div>
           </>
         )}
