@@ -14,6 +14,7 @@ import UpdateChannel from "./Pages/Channel/UpdateChannel";
 import { useSelector } from "react-redux";
 import CreatePage from "./Pages/CreatePage";
 import CreateVideo from "./Pages/Video/CreateVideo";
+import PlayVideo from "./Pages/Video/PlayVideo";
 import CreatePost from "./Pages/Post/CreatePost";
 import CreatePlaylist from "./Pages/Playlist/CreatePlaylist";
 import CreateShorts from "./Pages/Shorts/CreateShorts";
@@ -148,6 +149,14 @@ const App = () => {
           element={
             <ProtectRoute userData={user}>
               <CreateChannel />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/watch-video/:id"
+          element={
+            <ProtectRoute userData={user}>
+              <PlayVideo />
             </ProtectRoute>
           }
         />
