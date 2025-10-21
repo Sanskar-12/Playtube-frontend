@@ -21,6 +21,7 @@ import MobileNav from "../components/MobileNav";
 import { categories } from "../utils";
 import { useSelector } from "react-redux";
 import Profile from "../components/Profile";
+import AllVideosPage from "../components/AllVideosPage";
 
 const Home = () => {
   const [input, setInput] = useState("");
@@ -207,16 +208,21 @@ const Home = () => {
         }`}
       >
         {location.pathname === "/" && (
-          <div className="flex items-center gap-3 overflow-x-auto hover:scrollbar-auto scrollbar-none pt-2 mt-[60px]">
-            {categories.map((category, index) => (
-              <button
-                key={index}
-                className="whitespace-nowrap bg-[#272727] px-4 py-1 rounded-lg text-sm hover:bg-gray-700"
-              >
-                {category}
-              </button>
-            ))}
-          </div>
+          <>
+            <div className="flex items-center gap-3 overflow-x-auto hover:scrollbar-auto scrollbar-none pt-2 mt-[60px]">
+              {categories.map((category, index) => (
+                <button
+                  key={index}
+                  className="whitespace-nowrap bg-[#272727] px-4 py-1 rounded-lg text-sm hover:bg-gray-700"
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+            <div className="mt-3">
+              <AllVideosPage />
+            </div>
+          </>
         )}
         {popup && <Profile />}
 

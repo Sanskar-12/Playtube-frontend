@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { serverUrl } from "../App";
 import {
   setAllShortsData,
@@ -9,6 +9,7 @@ import {
 
 const useGetAllContentData = () => {
   const dispatch = useDispatch();
+  const { channelData } = useSelector((state) => state.content);
 
   useEffect(() => {
     const fetchAllVideos = async () => {
@@ -24,7 +25,7 @@ const useGetAllContentData = () => {
       }
     };
     fetchAllVideos();
-  }, [dispatch]);
+  }, [dispatch, channelData]);
 
   useEffect(() => {
     const fetchAllShorts = async () => {
@@ -40,7 +41,7 @@ const useGetAllContentData = () => {
       }
     };
     fetchAllShorts();
-  }, [dispatch]);
+  }, [dispatch, channelData]);
 };
 
 export default useGetAllContentData;
