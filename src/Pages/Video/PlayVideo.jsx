@@ -1,7 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { FaBackward, FaForward, FaPause, FaPlay } from "react-icons/fa";
+import {
+  FaBackward,
+  FaExpand,
+  FaForward,
+  FaPause,
+  FaPlay,
+  FaVolumeMute,
+  FaVolumeUp,
+} from "react-icons/fa";
+import { SiYoutubeshorts } from "react-icons/si";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import ShortCard from "../../components/ShortCard";
 
 const PlayVideo = () => {
   const videoRef = useRef();
@@ -12,8 +22,20 @@ const PlayVideo = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [vol, setVol] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
 
-  const { allVideosData } = useSelector((state) => state.content);
+  console.log(video, channel);
+
+  const navigate = useNavigate();
+
+  const { allVideosData, allShortsData } = useSelector(
+    (state) => state.content
+  );
+
+  const suggestedVideo =
+    allVideosData?.filter((video) => video._id !== id).slice(0, 10) || [];
+  const suggestedShorts = allShortsData?.slice(0, 10) || [];
 
   const onTogglePlay = () => {
     if (!videoRef.current) return;
@@ -54,6 +76,30 @@ const PlayVideo = () => {
     setDuration(videoRef.current.duration);
   };
 
+  const handleVolume = (e) => {
+    const vol = parseFloat(e.target.value);
+    setVol(vol);
+    if (vol === 0) {
+      setIsMuted(true);
+    }
+    if (videoRef.current) {
+      videoRef.current.volume = vol;
+    }
+  };
+
+  const handleMute = () => {
+    if (!videoRef.current) return;
+    setIsMuted(!isMuted);
+    videoRef.current.muted = !isMuted;
+  };
+
+  const handleFullScreen = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.requestFullscreen) {
+      videoRef.current.requestFullscreen();
+    }
+  };
+
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600)
       .toString()
@@ -82,6 +128,7 @@ const PlayVideo = () => {
 
   return (
     <div className="flex bg-[#0f0f0f] text-white flex-col lg:flex-row gap-6 p-4 lg:p-6">
+      {/* Left Side */}
       <div className="flex-1">
         {/* Video Player */}
         <div
@@ -122,43 +169,115 @@ const PlayVideo = () => {
               </button>
             </div>
           )}
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent px-2 sm:px-4 py-2 z-30">
-          <input
-            type="range"
-            min={0}
-            max={duration}
-            value={currentTime}
-            className="w-full accent-orange-600"
-            onChange={(e) => handleSeek(e)}
-          />
-          <div className="flex items-center justify-between mt-1 sm:mt-2 text-xs sm:text-sm text-gray-200">
-            <div className="flex items-center gap-3">
-              <span>
-                {formatTime(currentTime)}/{formatTime(duration)}
-              </span>
-              <button
-                className="bg-black/70 px-2 py-1 rounded hover:bg-orange-600 transition"
-                onClick={skipBackward}
-              >
-                <FaBackward size={14} />
-              </button>
-              <button
-                className="bg-black/70 px-2 py-1 rounded hover:bg-orange-600 transition"
-                onClick={() => onTogglePlay()}
-              >
-                {isPlaying ? <FaPause size={14} /> : <FaPlay size={14} />}
-              </button>
-              <button
-                className="bg-black/70 px-2 py-1 rounded hover:bg-orange-600 transition"
-                onClick={skipForward}
-              >
-                <FaForward size={14} />
-              </button>
-            </div>
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent px-2 sm:px-4 py-2 z-30">
+            <input
+              type="range"
+              min={0}
+              max={duration}
+              value={currentTime}
+              className="w-full accent-orange-600"
+              onChange={(e) => handleSeek(e)}
+            />
+            <div className="flex items-center justify-between mt-1 sm:mt-2 text-xs sm:text-sm text-gray-200">
+              <div className="flex items-center gap-3">
+                <span>
+                  {formatTime(currentTime)}/{formatTime(duration)}
+                </span>
+                <button
+                  className="bg-black/70 px-2 py-1 rounded hover:bg-orange-600 transition"
+                  onClick={skipBackward}
+                >
+                  <FaBackward size={14} />
+                </button>
+                <button
+                  className="bg-black/70 px-2 py-1 rounded hover:bg-orange-600 transition"
+                  onClick={() => onTogglePlay()}
+                >
+                  {isPlaying ? <FaPause size={14} /> : <FaPlay size={14} />}
+                </button>
+                <button
+                  className="bg-black/70 px-2 py-1 rounded hover:bg-orange-600 transition"
+                  onClick={skipForward}
+                >
+                  <FaForward size={14} />
+                </button>
+              </div>
 
-            <div></div>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <button onClick={handleMute}>
+                  {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
+                </button>
+                <input
+                  type="range"
+                  value={isMuted ? 0 : vol}
+                  onChange={handleVolume}
+                  className="accent-orange-600 w-16 sm:w-24"
+                  min={0}
+                  max={1}
+                  step={0.1}
+                />
+                <button onClick={handleFullScreen}>
+                  <FaExpand />
+                </button>
+              </div>
+            </div>
           </div>
+        </div>
+
+        {/* More Options */}
+        <h1 className="mt-4 text-lg sm:text-xl font-bold text-white flex">
+          {video?.title}
+        </h1>
+      </div>
+
+      {/* Right Side */}
+      <div className="w-full lg:w-[380px] px-4 py-4 border-t lg:border-t-0 lg:border-l border-gray-800 overflow-y-auto">
+        <h2 className="flex items-center gap-2 font-bold text-lg mb-3">
+          <SiYoutubeshorts className="text-orange-600" />
+          Shorts
+        </h2>
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-3">
+          {suggestedShorts.map((short) => (
+            <div key={short?._id}>
+              <ShortCard
+                id={short?._id}
+                shortUrl={short?.shortsUrl}
+                avatar={short?.channel?.avatar}
+                channelName={short?.channel?.name}
+                title={short?.title}
+                views={short?.views}
+                key={short?._id}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="font-bold text-lg mt-4 mb-3">Up Next</div>
+        <div className="space-y-3">
+          {suggestedVideo?.map((video) => (
+            <div
+              key={video?._id}
+              className="flex gap-2 sm:gap-3 cursor-pointer hover:bg-[#1a1a1a] p-2 rounded-lg transition"
+              onClick={() => navigate(`/watch-video/${video?._id}`)}
+            >
+              <img
+                src={video?.thumbnail}
+                alt="Thumbnail"
+                className="w-32 sm:w-40 h-20 sm:h-24 rounded-lg object-cover"
+              />
+              <div>
+                <p className="font-semibold line-clamp-2 text-sm sm:text-base text-white">
+                  {video?.title}
+                </p>
+                <p className="text-xs sm:text-sm text-gray-400">
+                  {video?.channel?.name}
+                </p>
+                <p className="text-xs sm:text-sm text-gray-400">
+                  {video?.views}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
