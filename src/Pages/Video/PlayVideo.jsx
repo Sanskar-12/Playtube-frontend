@@ -5,6 +5,7 @@ import {
   FaForward,
   FaPause,
   FaPlay,
+  FaThumbsUp,
   FaVolumeMute,
   FaVolumeUp,
 } from "react-icons/fa";
@@ -12,6 +13,8 @@ import { SiYoutubeshorts } from "react-icons/si";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import ShortCard from "../../components/ShortCard";
+import { ClipLoader } from "react-spinners";
+import IconButton from "../../components/IconButton";
 
 const PlayVideo = () => {
   const videoRef = useRef();
@@ -24,6 +27,8 @@ const PlayVideo = () => {
   const [duration, setDuration] = useState(0);
   const [vol, setVol] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   console.log(video, channel);
 
@@ -32,6 +37,7 @@ const PlayVideo = () => {
   const { allVideosData, allShortsData } = useSelector(
     (state) => state.content
   );
+  const { user } = useSelector((state) => state.user);
 
   const suggestedVideo =
     allVideosData?.filter((video) => video._id !== id).slice(0, 10) || [];
@@ -228,6 +234,47 @@ const PlayVideo = () => {
         <h1 className="mt-4 text-lg sm:text-xl font-bold text-white flex">
           {video?.title}
         </h1>
+        <p className="text-sm text-gray-400">{video?.views}</p>
+        <div className="mt-2 flex flex-wrap items-center justify-between">
+          {/* Left Div */}
+          <div className="flex items-center justify-start gap-4">
+            <img
+              src={channel?.avatar}
+              alt="Channel Avatar"
+              className="w-12 h-12 rounded-full border-2 border-gray-600"
+            />
+            <div>
+              <h1 className="text-md font-bold">{channel?.name}</h1>
+              <h3 className="text-[13px]">
+                {channel?.subscribers?.length} Subscribers
+              </h3>
+            </div>
+            <button
+              className={`px-[20px] py-[8px] rounded-4xl border border-gray-600 ml-[20px] text-md ${
+                isSubscribed
+                  ? "bg-black text-white hover:bg-orange-600 hover:text-black"
+                  : "bg-white text-black hover:bg-orange-600 hover:text-black"
+              }`}
+            >
+              {loading ? (
+                <ClipLoader size={20} color="gray" />
+              ) : isSubscribed ? (
+                "Subscribed"
+              ) : (
+                "Subscribe"
+              )}
+            </button>
+          </div>
+          {/* Right Div */}
+          <div className="flex items-center gap-6 mt-3">
+            <IconButton
+              icon={FaThumbsUp}
+              label={"Likes"}
+              active={video?.likes?.includes(user?._id)}
+              count={video?.likes?.length}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Right Side */}
