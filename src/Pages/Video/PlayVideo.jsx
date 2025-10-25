@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import {
   FaBackward,
+  FaBookmark,
+  FaDownload,
   FaExpand,
   FaForward,
   FaPause,
   FaPlay,
+  FaThumbsDown,
   FaThumbsUp,
   FaVolumeMute,
   FaVolumeUp,
@@ -104,6 +107,15 @@ const PlayVideo = () => {
     if (videoRef.current.requestFullscreen) {
       videoRef.current.requestFullscreen();
     }
+  };
+
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = video.videoUrl;
+    link.download = "video.mp4";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const formatTime = (seconds) => {
@@ -272,6 +284,22 @@ const PlayVideo = () => {
               label={"Likes"}
               active={video?.likes?.includes(user?._id)}
               count={video?.likes?.length}
+            />
+            <IconButton
+              icon={FaThumbsDown}
+              label={"Dislikes"}
+              active={video?.dislikes?.includes(user?._id)}
+              count={video?.dislikes?.length}
+            />
+            <IconButton
+              icon={FaDownload}
+              label={"Download"}
+              onClick={handleDownload}
+            />
+            <IconButton
+              icon={FaBookmark}
+              label={"Save"}
+              active={video?.savedBy?.includes(user?._id)}
             />
           </div>
         </div>

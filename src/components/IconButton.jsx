@@ -9,8 +9,8 @@ const IconButton = ({ icon: Icon, active, label, count, onClick }) => {
       >
         <Icon size={20} className={`${active ? "text-black" : "text-white"}`} />
       </div>
-      <span>
-        {label} {count !== undefined && `(${count})`}
+      <span className="text-xs mt-1 flex gap-1">
+        {count !== undefined && `${count}`} <span>{label} </span>
       </span>
     </button>
   );
