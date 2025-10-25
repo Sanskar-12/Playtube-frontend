@@ -9,7 +9,7 @@ import {
 
 const useGetAllContentData = () => {
   const dispatch = useDispatch();
-  const { channelData } = useSelector((state) => state.content);
+  const { channelData } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchAllVideos = async () => {

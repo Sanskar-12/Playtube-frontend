@@ -13,13 +13,23 @@ import {
   FaVolumeUp,
 } from "react-icons/fa";
 import { SiYoutubeshorts } from "react-icons/si";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import ShortCard from "../../components/ShortCard";
 import { ClipLoader } from "react-spinners";
 import IconButton from "../../components/IconButton";
+import Description from "../../components/Description";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { serverUrl } from "../../App";
+import { setChannelData } from "../../redux/reducers/userSlice";
 
 const PlayVideo = () => {
+  const { allVideosData, allShortsData } = useSelector(
+    (state) => state.content
+  );
+  const { user, channelData } = useSelector((state) => state.user);
+
   const videoRef = useRef();
   const { id } = useParams();
   const [video, setVideo] = useState(null);
@@ -30,17 +40,18 @@ const PlayVideo = () => {
   const [duration, setDuration] = useState(0);
   const [vol, setVol] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(true);
+  const [isSubscribed, setIsSubscribed] = useState(
+    channel?.subscribers?.some(
+      (sub) =>
+        sub?.toString() === user?._id?.toString() ||
+        sub?._id.toString() === user?._id?.toString()
+    )
+  );
   const [loading, setLoading] = useState(false);
 
-  console.log(video, channel);
-
   const navigate = useNavigate();
-
-  const { allVideosData, allShortsData } = useSelector(
-    (state) => state.content
-  );
-  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  console.log(isSubscribed);
 
   const suggestedVideo =
     allVideosData?.filter((video) => video._id !== id).slice(0, 10) || [];
@@ -118,6 +129,40 @@ const PlayVideo = () => {
     document.body.removeChild(link);
   };
 
+  const handleSubscribe = async () => {
+    if (!channel?._id) return;
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/add/or/remove/subscribers`,
+        {
+          channelId: channel?._id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setChannel((prev) => ({
+        ...prev,
+        subscribers: data?.updatedChannel?.subscribers || prev.subscribers,
+      }));
+
+      console.log(channel);
+      dispatch(
+        setChannelData({
+          ...channelData,
+          subscribers: data?.updatedChannel?.subscribers,
+        })
+      );
+    } catch (error) {
+      toast.error("Error in Subscribing the channel");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600)
       .toString()
@@ -130,6 +175,16 @@ const PlayVideo = () => {
       .padStart(2, "0");
     return `${hrs}:${min}:${sec}`;
   };
+
+  useEffect(() => {
+    setIsSubscribed(
+      channel?.subscribers?.some(
+        (sub) =>
+          sub?.toString() === user?._id?.toString() ||
+          sub?._id.toString() === user?._id?.toString()
+      )
+    );
+  }, [channel?.subscribers, user?._id]);
 
   useEffect(() => {
     if (!allVideosData) {
@@ -267,6 +322,7 @@ const PlayVideo = () => {
                   ? "bg-black text-white hover:bg-orange-600 hover:text-black"
                   : "bg-white text-black hover:bg-orange-600 hover:text-black"
               }`}
+              onClick={handleSubscribe}
             >
               {loading ? (
                 <ClipLoader size={20} color="gray" />
@@ -301,6 +357,27 @@ const PlayVideo = () => {
               label={"Save"}
               active={video?.savedBy?.includes(user?._id)}
             />
+          </div>
+        </div>
+
+        {/* Description Section */}
+        <div className="mt-4 bg-[#1a1a1a] p-3 rounded-lg">
+          <h2 className="text-md font-semibold mb-2">Description</h2>
+          <Description text={video?.description} />
+        </div>
+
+        {/* Comments Section */}
+        <div className="mt-6">
+          <h2 className="text-lg font-semibold mb-3">Comments</h2>
+          <div className="flex gap-2 mb-4">
+            <input
+              type="text"
+              className="flex-1 border border-gray-700 bg-[#1a1a1a] text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-600"
+              placeholder="Add a Comment..."
+            />
+            <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg">
+              Post
+            </button>
           </div>
         </div>
       </div>
