@@ -44,14 +44,13 @@ const PlayVideo = () => {
     channel?.subscribers?.some(
       (sub) =>
         sub?.toString() === user?._id?.toString() ||
-        sub?._id.toString() === user?._id?.toString()
+        sub?._id?.toString() === user?._id?.toString()
     )
   );
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(isSubscribed);
 
   const suggestedVideo =
     allVideosData?.filter((video) => video._id !== id).slice(0, 10) || [];
@@ -148,7 +147,6 @@ const PlayVideo = () => {
         subscribers: data?.updatedChannel?.subscribers || prev.subscribers,
       }));
 
-      console.log(channel);
       dispatch(
         setChannelData({
           ...channelData,
@@ -181,7 +179,7 @@ const PlayVideo = () => {
       channel?.subscribers?.some(
         (sub) =>
           sub?.toString() === user?._id?.toString() ||
-          sub?._id.toString() === user?._id?.toString()
+          sub?._id?.toString() === user?._id?.toString()
       )
     );
   }, [channel?.subscribers, user?._id]);
