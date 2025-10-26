@@ -49,6 +49,10 @@ const PlayVideo = () => {
     )
   );
   const [loading, setLoading] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
+  const [replyLoading, setReplyLoading] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -227,6 +231,56 @@ const PlayVideo = () => {
     }
   };
 
+  const handleComment = async () => {
+    if (!newComment) return;
+    setCommentLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/add/comment`,
+        {
+          videoId: video?._id,
+          message: newComment,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setComments(data?.video?.comments);
+      setNewComment("");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setCommentLoading(false);
+    }
+  };
+
+  console.log(comments);
+
+  const handleReply = async ({ commentId, replyText }) => {
+    if (!replyText) return;
+    setReplyLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/add/reply`,
+        {
+          videoId: video?._id,
+          commentId,
+          message: newComment,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setComments(data?.video?.comments);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setReplyLoading(false);
+    }
+  };
+
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600)
       .toString()
@@ -258,6 +312,7 @@ const PlayVideo = () => {
     if (currentVideo) {
       setVideo(currentVideo);
       setChannel(currentVideo.channel);
+      setComments(currentVideo?.comments);
     }
 
     const addViews = async () => {
@@ -475,10 +530,35 @@ const PlayVideo = () => {
               type="text"
               className="flex-1 border border-gray-700 bg-[#1a1a1a] text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-600"
               placeholder="Add a Comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
             />
-            <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg">
-              Post
+            <button
+              className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg"
+              onClick={handleComment}
+            >
+              {commentLoading ? <ClipLoader size={20} color="black" /> : "Post"}
             </button>
+          </div>
+          <div className="space-y-3">
+            {comments?.map((comment) => (
+              <div
+                key={comment?._id}
+                className="p-3 bg-[#1a1a1a] rounded-lg shadow-sm text-sm"
+              >
+                <div className="flex items-center justify-start gap-1">
+                  <img
+                    src={comment?.author?.photoUrl}
+                    alt="avatar"
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                  <h2 className="text-[13px]">{comment?.author?.userName}</h2>
+                </div>
+                <p className="font-medium px-[20px] py-[20px]">
+                  {comment?.message}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
