@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { serverUrl } from "../../App";
 import { setChannelData } from "../../redux/reducers/userSlice";
+import { setAllVideosData } from "../../redux/reducers/contentSlice";
 
 const PlayVideo = () => {
   const { allVideosData, allShortsData } = useSelector(
@@ -185,17 +186,43 @@ const PlayVideo = () => {
   }, [channel?.subscribers, user?._id]);
 
   useEffect(() => {
-    if (!allVideosData) {
-      return;
-    }
+    if (!id || !Array.isArray(allVideosData)) return;
 
-    const currentVideo = allVideosData.find((video) => video._id === id);
+    const currentVideo = allVideosData.find((vid) => vid._id === id);
 
     if (currentVideo) {
       setVideo(currentVideo);
       setChannel(currentVideo.channel);
     }
-  }, [id, allVideosData]);
+
+    const addViews = async () => {
+      try {
+        const { data } = await axios.put(
+          `${serverUrl}/api/v1/add/views`,
+          { videoId: video?._id },
+          { withCredentials: true }
+        );
+
+        setVideo((prev) =>
+          prev ? { ...prev, views: data?.video?.views } : prev
+        );
+
+        dispatch(
+          setAllVideosData(
+            allVideosData.map((v) =>
+              v._id === id ? { ...v, views: data?.video?.views } : v
+            )
+          )
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    addViews();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, video?._id]);
 
   return (
     <div className="flex bg-[#0f0f0f] text-white flex-col lg:flex-row gap-6 p-4 lg:p-6">

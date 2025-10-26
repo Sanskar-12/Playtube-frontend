@@ -10,10 +10,12 @@ const AllShortsPage = () => {
   return (
     <div className="px-6 py-4">
       {/* Heading */}
-      <h2 className="text-xl font-bold mb-4 flex items-center gap-1">
-        <SiYoutubeshorts className="w-6 h-6 text-red-600" />
-        Shorts
-      </h2>
+      {latestShorts.length > 0 && (
+        <h2 className="text-xl font-bold mb-4 flex items-center gap-1">
+          <SiYoutubeshorts className="w-6 h-6 text-red-600" />
+          Shorts
+        </h2>
+      )}
       {/* Horizontal scroll with fixed width cards */}
       <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
         {latestShorts?.map((short) => (
