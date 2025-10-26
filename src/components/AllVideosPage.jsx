@@ -60,7 +60,7 @@ const AllVideosPage = () => {
           title={video?.title}
           channelLogo={video?.channel?.avatar}
           channelName={video?.channel?.name}
-          views={video?.views}
+          views={video?.views?.length}
           id={video?._id}
           duration={durations[video._id] || "00:00:00"}
         />

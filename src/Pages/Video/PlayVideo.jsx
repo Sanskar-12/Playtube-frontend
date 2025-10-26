@@ -162,6 +162,71 @@ const PlayVideo = () => {
     }
   };
 
+  const handleLike = async () => {
+    try {
+      const { data } = await axios.put(
+        `${serverUrl}/api/v1/toggle/likes`,
+        {
+          videoId: video?._id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setVideo((prev) => ({
+        ...prev,
+        likes: data?.video?.likes,
+        dislikes: data?.video?.dislikes,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDislike = async () => {
+    try {
+      const { data } = await axios.put(
+        `${serverUrl}/api/v1/toggle/dislikes`,
+        {
+          videoId: video?._id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setVideo((prev) => ({
+        ...prev,
+        likes: data?.video?.likes,
+        dislikes: data?.video?.dislikes,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const { data } = await axios.put(
+        `${serverUrl}/api/v1/toggle/save`,
+        {
+          videoId: video?._id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setVideo((prev) => ({
+        ...prev,
+        savedBy: data?.video?.savedBy,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600)
       .toString()
@@ -326,7 +391,15 @@ const PlayVideo = () => {
         <h1 className="mt-4 text-lg sm:text-xl font-bold text-white flex">
           {video?.title}
         </h1>
-        <p className="text-sm text-gray-400">{video?.views}</p>
+        <p className="text-sm text-gray-400">
+          {" "}
+          {Number(video?.views?.length) >= 1_000_000
+            ? Math.floor(Number(video?.views?.length) / 1_000_000) + "M"
+            : Number(video?.views?.length) >= 1_000
+            ? Math.floor(Number(video?.views?.length) / 1_000) + "K"
+            : Number(video?.views?.length) || 0}{" "}
+          views
+        </p>
         <div className="mt-2 flex flex-wrap items-center justify-between">
           {/* Left Div */}
           <div className="flex items-center justify-start gap-4">
@@ -365,12 +438,14 @@ const PlayVideo = () => {
               label={"Likes"}
               active={video?.likes?.includes(user?._id)}
               count={video?.likes?.length}
+              onClick={handleLike}
             />
             <IconButton
               icon={FaThumbsDown}
               label={"Dislikes"}
               active={video?.dislikes?.includes(user?._id)}
               count={video?.dislikes?.length}
+              onClick={handleDislike}
             />
             <IconButton
               icon={FaDownload}
@@ -381,6 +456,7 @@ const PlayVideo = () => {
               icon={FaBookmark}
               label={"Save"}
               active={video?.savedBy?.includes(user?._id)}
+              onClick={handleSave}
             />
           </div>
         </div>
@@ -409,10 +485,12 @@ const PlayVideo = () => {
 
       {/* Right Side */}
       <div className="w-full lg:w-[380px] px-4 py-4 border-t lg:border-t-0 lg:border-l border-gray-800 overflow-y-auto">
-        <h2 className="flex items-center gap-2 font-bold text-lg mb-3">
-          <SiYoutubeshorts className="text-orange-600" />
-          Shorts
-        </h2>
+        {suggestedShorts?.length && (
+          <h2 className="flex items-center gap-2 font-bold text-lg mb-3">
+            <SiYoutubeshorts className="text-orange-600" />
+            Shorts
+          </h2>
+        )}
         <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-3">
           {suggestedShorts.map((short) => (
             <div key={short?._id}>
