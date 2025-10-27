@@ -541,7 +541,7 @@ const PlayVideo = () => {
               {commentLoading ? <ClipLoader size={20} color="black" /> : "Post"}
             </button>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
             {comments?.map((comment) => (
               <div
                 key={comment?._id}
