@@ -24,6 +24,7 @@ import axios from "axios";
 import { serverUrl } from "../../App";
 import { setChannelData } from "../../redux/reducers/userSlice";
 import { setAllVideosData } from "../../redux/reducers/contentSlice";
+import ReplySection from "../../components/ReplySection";
 
 const PlayVideo = () => {
   const { allVideosData, allShortsData } = useSelector(
@@ -266,7 +267,7 @@ const PlayVideo = () => {
         {
           videoId: video?._id,
           commentId,
-          message: newComment,
+          message: replyText,
         },
         {
           withCredentials: true,
@@ -557,6 +558,28 @@ const PlayVideo = () => {
                 <p className="font-medium px-[20px] py-[20px]">
                   {comment?.message}
                 </p>
+                <div>
+                  {comment?.replies?.map((reply) => (
+                    <div key={reply?._id} className="p-2 bg-[#2a2a2a] rounded">
+                      <div className="flex items-center justify-start gap-1">
+                        <img
+                          src={reply?.author?.photoUrl}
+                          alt="avatar"
+                          className="w-6 h-6 rounded-full object-cover"
+                        />
+                        <h2 className="text-[13px]">
+                          @{reply?.author?.userName.toLowerCase()}
+                        </h2>
+                        <p className="px-[20px] py-[20px]">{reply?.message}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <ReplySection
+                  loading={replyLoading}
+                  comment={comment}
+                  handleReply={handleReply}
+                />
               </div>
             ))}
           </div>
