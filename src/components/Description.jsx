@@ -10,8 +10,16 @@ const Description = ({ text }) => {
   const MAX_LENGTH = 100;
 
   return (
-    <div className="mt-3 text-sm text-gray-300">
-      <p>
+    <div
+      className={`relative ${
+        expanded ? "h-48" : "h-15"
+      } overflow-y-auto px-1 py-1`}
+    >
+      <p
+        className={`text-sm text-gray-300 whitespace-pre-line ${
+          expanded ? "" : "line-clamp-1"
+        }`}
+      >
         {expanded || text?.length <= MAX_LENGTH
           ? text
           : text?.slice(0, MAX_LENGTH) + "..."}
