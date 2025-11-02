@@ -89,6 +89,30 @@ const Shorts = () => {
     }
   };
 
+  const handleLike = async (shortId) => {
+    try {
+      const { data } = await axios.put(
+        `${serverUrl}/api/v1/toggle/short/likes`,
+        {
+          shortId,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log(data);
+
+      // setVideo((prev) => ({
+      //   ...prev,
+      //   likes: data?.video?.likes,
+      //   dislikes: data?.video?.dislikes,
+      // }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // logic to play only the current video and pause others
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -218,7 +242,7 @@ const Shorts = () => {
                   label={"Likes"}
                   active={short?.likes?.includes(user?._id)}
                   count={short?.likes?.length}
-                  // onClick={handleLike}
+                  onClick={handleLike}
                 />
                 <IconButton
                   icon={FaThumbsDown}
