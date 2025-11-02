@@ -256,8 +256,6 @@ const PlayVideo = () => {
     }
   };
 
-  console.log(comments);
-
   const handleReply = async ({ commentId, replyText }) => {
     if (!replyText) return;
     setReplyLoading(true);

@@ -9,17 +9,25 @@ import {
   FaThumbsDown,
   FaThumbsUp,
 } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Description from "../../components/Description";
 import IconButton from "../../components/IconButton";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { serverUrl } from "../../App";
+import { ClipLoader } from "react-spinners";
+import { setChannelData } from "../../redux/reducers/userSlice";
 
 const Shorts = () => {
   const { allShortsData } = useSelector((state) => state.content);
-  const { user } = useSelector((state) => state.user);
+  const { user, channelData } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
 
   const [shortList, setShortList] = useState([]);
   const [playIndex, setPlayIndex] = useState(null);
   const [openComment, setOpenComment] = useState(null);
+  const [loading, setLoading] = useState(false);
   const videoRefs = useRef([]);
 
   const togglePlay = (index) => {
@@ -38,6 +46,46 @@ const Shorts = () => {
       setOpenComment(null);
     } else {
       setOpenComment(shortId);
+    }
+  };
+
+  const handleSubscribe = async (e, channelId) => {
+    if (!channelId) return;
+    e.stopPropagation();
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/add/or/remove/subscribers`,
+        {
+          channelId,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setShortList((prev) =>
+        prev.map((short) =>
+          short?.channel?._id === channelId
+            ? {
+                ...short,
+                channel: data?.updatedChannel,
+              }
+            : short
+        )
+      );
+
+      dispatch(
+        setChannelData({
+          ...channelData,
+          subscribers: data?.updatedChannel?.subscribers,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error("Error in Subscribing the channel");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -107,7 +155,10 @@ const Shorts = () => {
               </div>
             )}
 
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white space-y-2">
+            <div
+              className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white space-y-2"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="flex items-center justify-start gap-2">
                 <img
                   src={short?.channel?.avatar}
@@ -117,8 +168,26 @@ const Shorts = () => {
                 <span className="text-sm text-gray-300">
                   @{short?.channel?.name.toLowerCase()}
                 </span>
-                <button className="bg-white text-black text-xs px-[20px] py-[10px] rounded-full cursor-pointer">
-                  Subscribe
+                <button
+                  className={`${
+                    short?.channel?.subscribers?.includes(user?._id)
+                      ? "bg-[#000000a1] text-white border-1 border-gray-700"
+                      : "bg-white text-black"
+                  }  text-xs px-[20px] py-[10px] rounded-full cursor-pointer`}
+                  disabled={loading}
+                  onClick={(e) => handleSubscribe(e, short?.channel?._id)}
+                >
+                  {loading ? (
+                    <ClipLoader size={20} color="gray" />
+                  ) : short?.channel?.subscribers?.some(
+                      (sub) =>
+                        sub?.toString() === user?._id?.toString() ||
+                        sub?._id?.toString() === user?._id?.toString()
+                    ) ? (
+                    "Subscribed"
+                  ) : (
+                    "Subscribe"
+                  )}
                 </button>
               </div>
               <div className="flex items-center justify-start">
@@ -140,7 +209,10 @@ const Shorts = () => {
                 <Description text={short?.description} />
               </div>
 
-              <div className="absolute right-3 bottom-28 flex flex-col items-center gap-5 text-white">
+              <div
+                className="absolute right-3 bottom-28 flex flex-col items-center gap-5 text-white"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <IconButton
                   icon={FaThumbsUp}
                   label={"Likes"}
@@ -174,11 +246,27 @@ const Shorts = () => {
               </div>
             </div>
             {openComment === short?._id && (
-              <div className="absolute bottom-0 left-0 right-0 h-[60%] bg-black/95 text-white p-4 rounded-t-2xl overflow-y-auto">
+              <div
+                className="absolute bottom-0 left-0 right-0 h-[60%] bg-black/95 text-white p-4 rounded-t-2xl overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <div className="flex justify-between items-center mb-3">
                   <h3 className="font-bold text-lg">Comments</h3>
                   <button>
-                    <FaArrowDown size={20} />
+                    <FaArrowDown
+                      size={20}
+                      onClick={() => setOpenComment(false)}
+                    />
+                  </button>
+                </div>
+                <div className="mt-4 flex gap-2">
+                  <input
+                    type="text"
+                    className="flex-1 bg-gray-900 text-white p-2 rounded"
+                    placeholder="Add a comment..."
+                  />
+                  <button className="bg-black px-4 py-2 border-1 border-gray-700 rounded-xl">
+                    Post
                   </button>
                 </div>
               </div>
