@@ -19,11 +19,13 @@ import { ClipLoader } from "react-spinners";
 import { setChannelData } from "../../redux/reducers/userSlice";
 import { setAllShortsData } from "../../redux/reducers/contentSlice";
 import ReplySection from "../../components/ReplySection";
+import { useParams } from "react-router-dom";
 
-const Shorts = () => {
+const WatchShorts = () => {
   const { allShortsData } = useSelector((state) => state.content);
   const { user, channelData } = useSelector((state) => state.user);
 
+  const { id } = useParams();
   const dispatch = useDispatch();
 
   const [shortList, setShortList] = useState([]);
@@ -35,6 +37,7 @@ const Shorts = () => {
   const [newComments, setNewComments] = useState("");
   const [comments, setComments] = useState([]);
   const videoRefs = useRef([]);
+  const selectedShort = allShortsData?.find((s) => s._id === id);
 
   const togglePlay = (index) => {
     const short = videoRefs.current[index];
@@ -330,19 +333,35 @@ const Shorts = () => {
   useEffect(() => {
     if (!allShortsData || allShortsData.length === 0) return;
 
-    const shuffled = [...allShortsData].sort(() => Math.random() - 0.5);
-    setShortList(shuffled);
-  }, [allShortsData]);
+    if (selectedShort) {
+      const selected = allShortsData.find(
+        (short) => short._id === selectedShort._id
+      );
+
+      const remaining = allShortsData.filter(
+        (short) => short._id !== selectedShort._id
+      );
+
+      if (selected) {
+        setShortList([selected, ...remaining]);
+        // setActiveIndex(0);
+      } else {
+        setShortList(allShortsData);
+      }
+    } else {
+      setShortList(allShortsData);
+    }
+  }, [selectedShort, allShortsData]);
 
   return (
     <div className="h-[100vh] w-full overflow-y-scroll snap-y snap-mandatory">
       {shortList.map((short, index) => (
         <div
           key={index}
-          className="min-h-screen w-full flex md:items-center items-start mt-[50px] md:mt-[0px] justify-center snap-start relative pt-[40px] md:pt-[0px]"
+          className="min-h-screen w-full flex md:items-center items-start  justify-center snap-start relative pt-[40px] md:pt-[0px]"
         >
           <div
-            className="relative w-[420px] md:w-[350px] aspect-[9/16] bg-black rounded-2xl overflow-hidden shadow-xl border border-gray-700 cursor-pointer"
+            className="relative w-[420px] md:w-[350px] aspect-[9/16] bg-black rounded-2xl mt-[50px] md:mt-[0px] overflow-hidden shadow-xl border border-gray-700 cursor-pointer"
             onClick={() => togglePlay(index)}
           >
             <video
@@ -551,4 +570,4 @@ const Shorts = () => {
   );
 };
 
-export default Shorts;
+export default WatchShorts;

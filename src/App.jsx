@@ -19,6 +19,7 @@ import CreatePost from "./Pages/Post/CreatePost";
 import CreatePlaylist from "./Pages/Playlist/CreatePlaylist";
 import CreateShorts from "./Pages/Shorts/CreateShorts";
 import useGetAllContentData from "./hooks/useGetAllContentData";
+import WatchShorts from "./Pages/Shorts/WatchShorts";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -52,6 +53,14 @@ const App = () => {
             element={
               <ProtectRoute userData={user}>
                 <Shorts />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/watch-short/:id"
+            element={
+              <ProtectRoute userData={user}>
+                <WatchShorts />
               </ProtectRoute>
             }
           />
