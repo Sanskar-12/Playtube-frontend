@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { ClipLoader } from "react-spinners";
 
-const ReplySection = ({ loading, comment, handleReply }) => {
+const ReplySection = ({ shortId, loading, comment, handleReply }) => {
   const [replyText, setReplyText] = useState("");
   const [showReplyInput, setShowReplyInput] = useState(false);
 
   const replyHandler = () => {
     handleReply({
+      shortId,
       commentId: comment._id,
       replyText,
     });

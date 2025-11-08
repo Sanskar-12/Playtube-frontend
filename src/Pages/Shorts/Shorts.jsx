@@ -18,6 +18,7 @@ import { serverUrl } from "../../App";
 import { ClipLoader } from "react-spinners";
 import { setChannelData } from "../../redux/reducers/userSlice";
 import { setAllShortsData } from "../../redux/reducers/contentSlice";
+import ReplySection from "../../components/ReplySection";
 
 const Shorts = () => {
   const { allShortsData } = useSelector((state) => state.content);
@@ -30,6 +31,7 @@ const Shorts = () => {
   const [openComment, setOpenComment] = useState(null);
   const [loading, setLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
+  const [replyLoading, setReplyLoading] = useState(false);
   const [newComments, setNewComments] = useState("");
   const [comments, setComments] = useState([]);
   const videoRefs = useRef([]);
@@ -39,9 +41,11 @@ const Shorts = () => {
     if (short.paused) {
       setPlayIndex(null);
       short.play();
+      console.log("herer 1");
     } else {
       setPlayIndex(index);
       short.pause();
+      console.log("herer 2");
     }
   };
 
@@ -196,6 +200,33 @@ const Shorts = () => {
     }
   };
 
+  const handleSave = async (shortId) => {
+    try {
+      const { data } = await axios.put(
+        `${serverUrl}/api/v1/toggle/short/save`,
+        {
+          shortId,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setShortList((prev) =>
+        prev.map((short) =>
+          short?._id === shortId
+            ? {
+                ...short,
+                savedBy: data?.short?.savedBy,
+              }
+            : short
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleComment = async (shortId) => {
     if (!newComments) return;
     setCommentLoading(true);
@@ -227,6 +258,40 @@ const Shorts = () => {
       console.log(error);
     } finally {
       setCommentLoading(false);
+    }
+  };
+
+  const handleReply = async ({ shortId, commentId, replyText }) => {
+    if (!replyText) return;
+    setReplyLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/add/short/reply`,
+        {
+          shortId,
+          commentId,
+          message: replyText,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setComments(data?.short?.comments);
+      setShortList((prev) =>
+        prev.map((short) =>
+          short?._id === shortId
+            ? {
+                ...short,
+                comments: data?.short?.comments,
+              }
+            : short
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setReplyLoading(false);
     }
   };
 
@@ -388,7 +453,7 @@ const Shorts = () => {
                   icon={FaBookmark}
                   label={"Save"}
                   active={short?.savedBy?.includes(user?._id)}
-                  // onClick={handleSave}
+                  onClick={() => handleSave(short?._id)}
                 />
               </div>
             </div>
@@ -418,12 +483,63 @@ const Shorts = () => {
                     className="bg-black px-4 py-2 border-1 border-gray-700 rounded-xl"
                     onClick={() => handleComment(short?._id)}
                   >
-                    Post
+                    {commentLoading ? (
+                      <ClipLoader size={20} color="white" />
+                    ) : (
+                      "Post"
+                    )}
                   </button>
                 </div>
                 <div className="space-y-3 mt-4">
                   {comments.length > 0 ? (
-                    comments.map((comment) => <div>{comment.message}</div>)
+                    comments.map((comment) => {
+                      return (
+                        <div
+                          key={comment?._id}
+                          className="bg-gray-800/40 p-2 rounded-lg"
+                        >
+                          <div className="flex items-center gap-2 mb-1">
+                            <img
+                              src={comment?.author?.photoUrl}
+                              alt="avatar"
+                              className="w-6 h-6 rounded-full"
+                            />
+                            <h3 className="text-sm font-semibold">
+                              {comment?.author?.userName}
+                            </h3>
+                          </div>
+                          <p className="text-sm ml-8">{comment.message}</p>
+                          <div>
+                            {comment?.replies?.map((reply) => (
+                              <div
+                                key={reply?._id}
+                                className="p-2 bg-[#2a2a2a] rounded"
+                              >
+                                <div className="flex items-center justify-start gap-1">
+                                  <img
+                                    src={reply?.author?.photoUrl}
+                                    alt="avatar"
+                                    className="w-6 h-6 rounded-full object-cover"
+                                  />
+                                  <h2 className="text-[13px]">
+                                    @{reply?.author?.userName.toLowerCase()}
+                                  </h2>
+                                  <p className="px-[20px] py-[20px]">
+                                    {reply?.message}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <ReplySection
+                            shortId={short?._id}
+                            loading={replyLoading}
+                            comment={comment}
+                            handleReply={handleReply}
+                          />
+                        </div>
+                      );
+                    })
                   ) : (
                     <p className="text-sm text-gray-400">No comments yet.</p>
                   )}
