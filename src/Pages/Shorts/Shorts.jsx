@@ -29,6 +29,9 @@ const Shorts = () => {
   const [playIndex, setPlayIndex] = useState(null);
   const [openComment, setOpenComment] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
+  const [newComments, setNewComments] = useState("");
+  const [comments, setComments] = useState([]);
   const videoRefs = useRef([]);
 
   const togglePlay = (index) => {
@@ -193,6 +196,40 @@ const Shorts = () => {
     }
   };
 
+  const handleComment = async (shortId) => {
+    if (!newComments) return;
+    setCommentLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/add/short/comment`,
+        {
+          shortId,
+          message: newComments,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setComments(data?.short?.comments);
+      setShortList((prev) =>
+        prev.map((short) =>
+          short?._id === shortId
+            ? {
+                ...short,
+                comments: data?.short?.comments,
+              }
+            : short
+        )
+      );
+      setNewComments("");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setCommentLoading(false);
+    }
+  };
+
   // logic to play only the current video and pause others
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -209,6 +246,8 @@ const Shorts = () => {
 
             const currentShort = shortList[index];
             handleView(currentShort?._id);
+
+            setComments(currentShort?.comments);
           } else {
             // pause other videos
             short.pause();
@@ -372,10 +411,22 @@ const Shorts = () => {
                     type="text"
                     className="flex-1 bg-gray-900 text-white p-2 rounded"
                     placeholder="Add a comment..."
+                    value={newComments}
+                    onChange={(e) => setNewComments(e.target.value)}
                   />
-                  <button className="bg-black px-4 py-2 border-1 border-gray-700 rounded-xl">
+                  <button
+                    className="bg-black px-4 py-2 border-1 border-gray-700 rounded-xl"
+                    onClick={() => handleComment(short?._id)}
+                  >
                     Post
                   </button>
+                </div>
+                <div className="space-y-3 mt-4">
+                  {comments.length > 0 ? (
+                    comments.map((comment) => <div>{comment.message}</div>)
+                  ) : (
+                    <p className="text-sm text-gray-400">No comments yet.</p>
+                  )}
                 </div>
               </div>
             )}
