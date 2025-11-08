@@ -31,11 +31,11 @@ const ShortCard = ({ shortUrl, title, channelName, avatar, views, id }) => {
         </div>
 
         <p className="text-xs text-gray-400">
-          {Number(views) >= 1_000_000
-            ? Math.floor(Number(views) / 1_000_000) + "M"
-            : Number(views) >= 1_000
-            ? Math.floor(Number(views) / 1_000) + "K"
-            : Number(views) || 0}{" "}
+          {Number(views.length) >= 1_000_000
+            ? Math.floor(Number(views.length) / 1_000_000) + "M"
+            : Number(views.length) >= 1_000
+            ? Math.floor(Number(views.length) / 1_000) + "K"
+            : Number(views.length) || 0}{" "}
           views
         </p>
       </div>

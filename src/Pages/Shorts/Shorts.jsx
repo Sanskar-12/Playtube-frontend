@@ -17,6 +17,7 @@ import axios from "axios";
 import { serverUrl } from "../../App";
 import { ClipLoader } from "react-spinners";
 import { setChannelData } from "../../redux/reducers/userSlice";
+import { setAllShortsData } from "../../redux/reducers/contentSlice";
 
 const Shorts = () => {
   const { allShortsData } = useSelector((state) => state.content);
@@ -101,13 +102,92 @@ const Shorts = () => {
         }
       );
 
-      console.log(data);
+      setShortList((prev) =>
+        prev.map((short) =>
+          short?._id === shortId
+            ? {
+                ...short,
+                dislikes: data?.short?.dislikes,
+                likes: data?.short?.likes,
+              }
+            : short
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-      // setVideo((prev) => ({
-      //   ...prev,
-      //   likes: data?.video?.likes,
-      //   dislikes: data?.video?.dislikes,
-      // }));
+  const handleDislike = async (shortId) => {
+    try {
+      const { data } = await axios.put(
+        `${serverUrl}/api/v1/toggle/short/dislikes`,
+        {
+          shortId,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setShortList((prev) =>
+        prev.map((short) =>
+          short?._id === shortId
+            ? {
+                ...short,
+                dislikes: data?.short?.dislikes,
+                likes: data?.short?.likes,
+              }
+            : short
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDownload = (short) => {
+    const link = document.createElement("a");
+    link.href = short.shortsUrl;
+    link.download = "shorts.mp4";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleView = async (shortId) => {
+    try {
+      const { data } = await axios.put(
+        `${serverUrl}/api/v1/add/short/views`,
+        {
+          shortId,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setShortList((prev) =>
+        prev.map((short) =>
+          short?._id === shortId
+            ? {
+                ...short,
+                views: data?.short?.views,
+              }
+            : short
+        )
+      );
+
+      setAllShortsData(
+        allShortsData.map((short) =>
+          short?._id === shortId
+            ? {
+                ...short,
+                views: data?.short?.views,
+              }
+            : short
+        )
+      );
     } catch (error) {
       console.log(error);
     }
@@ -119,12 +199,16 @@ const Shorts = () => {
       (entries) => {
         entries.forEach((entry) => {
           const index = entry.target.dataset.index;
+
           const short = videoRefs.current[index];
 
           if (entry.isIntersecting) {
             // play current video
             short.play();
             short.muted = false;
+
+            const currentShort = shortList[index];
+            handleView(currentShort?._id);
           } else {
             // pause other videos
             short.pause();
@@ -242,14 +326,14 @@ const Shorts = () => {
                   label={"Likes"}
                   active={short?.likes?.includes(user?._id)}
                   count={short?.likes?.length}
-                  onClick={handleLike}
+                  onClick={() => handleLike(short?._id)}
                 />
                 <IconButton
                   icon={FaThumbsDown}
                   label={"Dislikes"}
                   active={short?.dislikes?.includes(user?._id)}
                   count={short?.dislikes?.length}
-                  // onClick={handleDislike}
+                  onClick={() => handleDislike(short?._id)}
                 />
                 <IconButton
                   icon={FaComment}
@@ -259,7 +343,7 @@ const Shorts = () => {
                 <IconButton
                   icon={FaDownload}
                   label={"Download"}
-                  // onClick={handleDownload}
+                  onClick={() => handleDownload(short)}
                 />
                 <IconButton
                   icon={FaBookmark}
