@@ -1,13 +1,21 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { serverUrl } from "../../App";
+import { setChannelData } from "../../redux/reducers/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const CreatePlaylist = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [videosData, setVideosData] = useState([]);
   const [selectedvideos, setSelectedVideos] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const { channelData } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const toggleSelectedVideos = (videoId) => {
     setSelectedVideos((prev) =>
@@ -15,6 +23,41 @@ const CreatePlaylist = () => {
         ? prev.filter((id) => id !== videoId)
         : [...prev, videoId]
     );
+  };
+
+  const handleCreatePlaylist = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/create/playlist`,
+        {
+          title,
+          description,
+          channelId: channelData?._id,
+          videoIds: selectedvideos,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log(data);
+
+      dispatch(
+        setChannelData({
+          ...channelData,
+          playlists: [...(channelData.playlists || []), data.playlist],
+        })
+      );
+
+      navigate("/");
+      toast.success("Playlist created successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Error in Creating Playlist");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -43,7 +86,7 @@ const CreatePlaylist = () => {
           />
           <div>
             <p className="mb-3 text-lg font-semibold">Select Videos</p>
-            {videosData.length > 0 ? (
+            {videosData.length < 0 ? (
               <p className="text-sm text-gray-400">
                 No Videos found for this channel
               </p>
@@ -57,11 +100,27 @@ const CreatePlaylist = () => {
                         : "border-gray-700"
                     }`}
                     onClick={() => toggleSelectedVideos(video?._id)}
-                  ></div>
+                  >
+                    <img
+                      src={video?.thumbnail}
+                      alt="Thumbnail"
+                      className="w-full h-28 object-cover"
+                    />
+                    <p className="p-2 text-sm truncate">{video?.title}</p>
+                  </div>
                 ))}
               </div>
             )}
           </div>
+          <button
+            disabled={
+              !title || !description || selectedvideos.length <= 0 || loading
+            }
+            className="w-full bg-orange-600 hover:bg-orange-700 py-3 rounded-lg font-medium disabled:bg-gray-600 flex items-center justify-center"
+            onClick={() => handleCreatePlaylist()}
+          >
+            {loading ? "Creating Playlist" : "Create Playlist"}
+          </button>
         </div>
       </main>
     </div>
