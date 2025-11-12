@@ -41,8 +41,6 @@ const CreatePlaylist = () => {
         }
       );
 
-      console.log(data);
-
       dispatch(
         setChannelData({
           ...channelData,
