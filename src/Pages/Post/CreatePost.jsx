@@ -22,7 +22,9 @@ const CreatePost = () => {
 
     formData.append("channelId", channelData?._id);
     formData.append("content", content);
-    formData.append("image", image);
+    if (image) {
+      formData.append("image", image);
+    }
 
     setLoading(true);
     try {
