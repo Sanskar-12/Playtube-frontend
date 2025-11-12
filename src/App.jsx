@@ -20,6 +20,7 @@ import CreatePlaylist from "./Pages/Playlist/CreatePlaylist";
 import CreateShorts from "./Pages/Shorts/CreateShorts";
 import useGetAllContentData from "./hooks/useGetAllContentData";
 import WatchShorts from "./Pages/Shorts/WatchShorts";
+import useGetAllChannelData from "./hooks/useGetAllChannelData";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -43,6 +44,7 @@ const App = () => {
 
   useGetCurrentUser();
   useGetCurrentChannel();
+  useGetAllChannelData();
   useGetAllContentData();
   return (
     <>
