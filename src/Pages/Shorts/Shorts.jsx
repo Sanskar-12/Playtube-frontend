@@ -19,12 +19,14 @@ import { ClipLoader } from "react-spinners";
 import { setChannelData } from "../../redux/reducers/userSlice";
 import { setAllShortsData } from "../../redux/reducers/contentSlice";
 import ReplySection from "../../components/ReplySection";
+import { useNavigate } from "react-router-dom";
 
 const Shorts = () => {
   const { allShortsData } = useSelector((state) => state.content);
   const { user, channelData } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [shortList, setShortList] = useState([]);
   const [playIndex, setPlayIndex] = useState(null);
@@ -374,8 +376,12 @@ const Shorts = () => {
                   src={short?.channel?.avatar}
                   alt="avatar"
                   className="w-8 h-8 rounded-full border-1 border-gray-700"
+                  onClick={() => navigate(`/channel/${short?.channel?._id}`)}
                 />
-                <span className="text-sm text-gray-300">
+                <span
+                  className="text-sm text-gray-300"
+                  onClick={() => navigate(`/channel/${short?.channel?._id}`)}
+                >
                   @{short?.channel?.name.toLowerCase()}
                 </span>
                 <button

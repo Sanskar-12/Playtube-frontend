@@ -460,10 +460,16 @@ const PlayVideo = () => {
             <img
               src={channel?.avatar}
               alt="Channel Avatar"
-              className="w-12 h-12 rounded-full border-2 border-gray-600"
+              className="w-12 h-12 rounded-full border-2 border-gray-600 cursor-pointer"
+              onClick={() => navigate(`/channel/${channel?._id}`)}
             />
             <div>
-              <h1 className="text-md font-bold">{channel?.name}</h1>
+              <h1
+                className="text-md font-bold cursor-pointer"
+                onClick={() => navigate(`/channel/${channel?._id}`)}
+              >
+                {channel?.name}
+              </h1>
               <h3 className="text-[13px]">
                 {channel?.subscribers?.length} Subscribers
               </h3>

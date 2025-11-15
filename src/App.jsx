@@ -21,6 +21,7 @@ import CreateShorts from "./Pages/Shorts/CreateShorts";
 import useGetAllContentData from "./hooks/useGetAllContentData";
 import WatchShorts from "./Pages/Shorts/WatchShorts";
 import useGetAllChannelData from "./hooks/useGetAllChannelData";
+import ChannelPage from "./Pages/Channel/ChannelPage";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -71,6 +72,14 @@ const App = () => {
             element={
               <ProtectRoute userData={user}>
                 <MobileProfile />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/channel/:id"
+            element={
+              <ProtectRoute userData={user}>
+                <ChannelPage />
               </ProtectRoute>
             }
           />
