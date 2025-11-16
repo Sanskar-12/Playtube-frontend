@@ -8,6 +8,7 @@ import { ClipLoader } from "react-spinners";
 import VideoCard from "../../components/VideoCard";
 import ShortCard from "../../components/ShortCard";
 import PlaylistCard from "../../components/PlaylistCard";
+import PostCard from "../../components/PostCard";
 
 // Helper to get duration
 const getVideoDuration = (url) => {
@@ -229,6 +230,14 @@ const ChannelPage = () => {
                 videos={playlist?.videos}
                 savedBy={playlist?.savedBy}
               />
+            ))}
+          </div>
+        )}
+
+        {activeTab === "Community" && (
+          <div className="flex flex-wrap gap-5 pb-[40px]">
+            {channelData?.communityPosts?.map((post) => (
+              <PostCard key={post?._id} post={post} />
             ))}
           </div>
         )}
