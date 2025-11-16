@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
 import VideoCard from "../../components/VideoCard";
 import ShortCard from "../../components/ShortCard";
+import PlaylistCard from "../../components/PlaylistCard";
 
 // Helper to get duration
 const getVideoDuration = (url) => {
@@ -49,8 +50,6 @@ const ChannelPage = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("Videos");
   const [durations, setDurations] = useState({});
-
-  console.log(channelData);
 
   const handleSubscribe = async () => {
     if (!channelData?._id) return;
@@ -215,6 +214,20 @@ const ChannelPage = () => {
                 avatar={channelData?.avatar}
                 shortUrl={short?.shortsUrl}
                 views={short?.views}
+              />
+            ))}
+          </div>
+        )}
+
+        {activeTab === "Playlists" && (
+          <div className="flex flex-wrap gap-5 pb-[40px]">
+            {channelData?.playlists?.map((playlist) => (
+              <PlaylistCard
+                key={playlist?._id}
+                id={playlist?._id}
+                title={playlist?.title}
+                videos={playlist?.videos}
+                savedBy={playlist?.savedBy}
               />
             ))}
           </div>
