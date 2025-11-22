@@ -140,8 +140,8 @@ const MobileProfile = () => {
         />
         <ProfileMenuItem
           icon={<FaClock />}
-          text="Save Videos"
-          onClick={() => navigate("/savevideos")}
+          text="Saved Videos"
+          onClick={() => navigate("/savedcontent")}
         />
         <ProfileMenuItem
           icon={<FaThumbsUp />}

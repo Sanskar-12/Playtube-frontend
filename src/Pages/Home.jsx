@@ -174,12 +174,12 @@ const Home = () => {
           />
           <SidebarItem
             icon={<GoVideo />}
-            text="Save videos"
+            text="Saved videos"
             open={sidebarOpen}
-            selected={selectedItem === "Save videos"}
+            selected={selectedItem === "Saved videos"}
             onClick={() => {
-              setSelectedItem("Save videos");
-              // navigate("/savevideos");
+              setSelectedItem("Saved videos");
+              navigate("/savedcontent");
             }}
           />
           <SidebarItem

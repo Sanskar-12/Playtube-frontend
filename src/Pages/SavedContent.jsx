@@ -32,46 +32,46 @@ const getVideoDuration = (url) => {
   });
 };
 
-const LikedContent = () => {
-  const [likedVideos, setLikedVideos] = useState([]);
-  const [likedShorts, setLikedShorts] = useState([]);
+const SavedContent = () => {
+  const [savedVideos, setSavedVideos] = useState([]);
+  const [savedShorts, setSavedShorts] = useState([]);
   const [durations, setDurations] = useState({});
 
   const { allVideosData } = useSelector((state) => state.content);
 
   useEffect(() => {
-    const fetchLikedVideos = async () => {
+    const fetchSavedVideos = async () => {
       try {
         const { data } = await axios.get(
-          `${serverUrl}/api/v1/get/liked/videos`,
+          `${serverUrl}/api/v1/get/saved/videos`,
           {
             withCredentials: true,
           }
         );
 
-        setLikedVideos(data.video);
+        setSavedVideos(data.video);
       } catch (error) {
         console.log(error);
-        toast.error("Error fetching liked videos");
+        toast.error("Error fetching saved videos");
       }
     };
-    const fetchLikedShorts = async () => {
+    const fetchSavedShorts = async () => {
       try {
         const { data } = await axios.get(
-          `${serverUrl}/api/v1/get/liked/shorts`,
+          `${serverUrl}/api/v1/get/saved/shorts`,
           {
             withCredentials: true,
           }
         );
 
-        setLikedShorts(data.shorts);
+        setSavedShorts(data.shorts);
       } catch (error) {
         console.log(error);
-        toast.error("Error fetching liked shorts");
+        toast.error("Error fetching saved shorts");
       }
     };
-    fetchLikedVideos();
-    fetchLikedShorts();
+    fetchSavedVideos();
+    fetchSavedShorts();
   }, []);
 
   useEffect(() => {
@@ -95,20 +95,20 @@ const LikedContent = () => {
     fetchDurations();
   }, [allVideosData]);
 
-  return likedShorts.length === 0 && likedVideos.length === 0 ? (
+  return savedShorts.length === 0 && savedVideos.length === 0 ? (
     <div className="flex justify-center items-center min-h-screen">
-      <p className="text-white text-center">No Liked Content</p>
+      <p className="text-white text-center">No Saved Content</p>
     </div>
   ) : (
     <div className="px-6 py-4 min-h-screen mt-[50px] lg:mt-[20px]">
-      {/* Liked Shorts */}
-      {likedShorts.length > 0 && (
+      {/* Saved Shorts */}
+      {savedShorts.length > 0 && (
         <>
           <h2 className="text-2xl font-bold mb-6 pt-[50px] border-b border-gray-300 pb-2 flex items-center gap-2">
-            <SiYoutubeshorts className="w-7 h-7 text-red-600" /> Liked Shorts
+            <SiYoutubeshorts className="w-7 h-7 text-red-600" /> Saved Shorts
           </h2>
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-            {likedShorts?.map((short) => (
+            {savedShorts?.map((short) => (
               <div className="flex-shrink-0" key={short?._id}>
                 <ShortCard
                   shortUrl={short?.shortsUrl}
@@ -124,14 +124,14 @@ const LikedContent = () => {
         </>
       )}
 
-      {/* Liked Videos */}
-      {likedVideos.length > 0 && (
+      {/* Saved Videos */}
+      {savedVideos.length > 0 && (
         <>
           <h2 className="text-2xl font-bold mb-6 pt-[50px] border-b border-gray-300 pb-2 flex items-center gap-2">
-            <GoVideo className="w-7 h-7 text-red-600" /> Liked Videos
+            <GoVideo className="w-7 h-7 text-red-600" /> Saved Videos
           </h2>
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-            {likedVideos?.map((video) => (
+            {savedVideos?.map((video) => (
               <div className="flex-shrink-0" key={video?._id}>
                 <VideoCard
                   key={video?._id}
@@ -152,4 +152,4 @@ const LikedContent = () => {
   );
 };
 
-export default LikedContent;
+export default SavedContent;
