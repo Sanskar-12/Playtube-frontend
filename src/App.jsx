@@ -25,6 +25,7 @@ import ChannelPage from "./Pages/Channel/ChannelPage";
 import LikedContent from "./Pages/LikedContent";
 import SavedContent from "./Pages/SavedContent";
 import SavedPlaylist from "./Pages/Playlist/SavedPlaylist";
+import useGetAllSubscribedContent from "./hooks/useGetAllSubscribedContent";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -50,6 +51,7 @@ const App = () => {
   useGetCurrentChannel();
   useGetAllChannelData();
   useGetAllContentData();
+  useGetAllSubscribedContent();
   return (
     <>
       <Routes>
