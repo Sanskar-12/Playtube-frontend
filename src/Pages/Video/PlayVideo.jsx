@@ -635,7 +635,12 @@ const PlayVideo = () => {
                   {video?.channel?.name}
                 </p>
                 <p className="text-xs sm:text-sm text-gray-400">
-                  {video?.views}
+                  {Number(video?.views?.length) >= 1_000_000
+                    ? Math.floor(Number(video?.views?.length) / 1_000_000) + "M"
+                    : Number(video?.views?.length) >= 1_000
+                    ? Math.floor(Number(video?.views?.length) / 1_000) + "K"
+                    : Number(video?.views?.length) || 0}{" "}
+                  views
                 </p>
               </div>
             </div>

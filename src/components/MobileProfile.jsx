@@ -146,7 +146,7 @@ const MobileProfile = () => {
         <ProfileMenuItem
           icon={<FaThumbsUp />}
           text="Liked Videos"
-          onClick={() => navigate("/likedvideos")}
+          onClick={() => navigate("/likedcontent")}
         />
         {user?.channel && (
           <ProfileMenuItem

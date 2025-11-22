@@ -1,5 +1,3 @@
-import React from "react";
-
 const MobileNav = ({ icon, text, onClick, active }) => {
   return (
     <button

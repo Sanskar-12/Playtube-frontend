@@ -22,6 +22,7 @@ import useGetAllContentData from "./hooks/useGetAllContentData";
 import WatchShorts from "./Pages/Shorts/WatchShorts";
 import useGetAllChannelData from "./hooks/useGetAllChannelData";
 import ChannelPage from "./Pages/Channel/ChannelPage";
+import LikedContent from "./Pages/LikedContent";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -139,6 +140,22 @@ const App = () => {
               </ProtectRoute>
             }
           />
+          <Route
+            path="/likedcontent"
+            element={
+              <ProtectRoute userData={user}>
+                <LikedContent />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/watch-video/:id"
+            element={
+              <ProtectRoute userData={user}>
+                <PlayVideo />
+              </ProtectRoute>
+            }
+          />
         </Route>
         <Route
           path="/signin"
@@ -169,14 +186,6 @@ const App = () => {
           element={
             <ProtectRoute userData={user}>
               <CreateChannel />
-            </ProtectRoute>
-          }
-        />
-        <Route
-          path="/watch-video/:id"
-          element={
-            <ProtectRoute userData={user}>
-              <PlayVideo />
             </ProtectRoute>
           }
         />
