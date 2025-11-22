@@ -24,6 +24,7 @@ import useGetAllChannelData from "./hooks/useGetAllChannelData";
 import ChannelPage from "./Pages/Channel/ChannelPage";
 import LikedContent from "./Pages/LikedContent";
 import SavedContent from "./Pages/SavedContent";
+import SavedPlaylist from "./Pages/Playlist/SavedPlaylist";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -154,6 +155,14 @@ const App = () => {
             element={
               <ProtectRoute userData={user}>
                 <SavedContent />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/savedplaylist"
+            element={
+              <ProtectRoute userData={user}>
+                <SavedPlaylist />
               </ProtectRoute>
             }
           />

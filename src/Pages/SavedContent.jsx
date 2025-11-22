@@ -96,8 +96,8 @@ const SavedContent = () => {
   }, [allVideosData]);
 
   return savedShorts.length === 0 && savedVideos.length === 0 ? (
-    <div className="flex justify-center items-center min-h-screen">
-      <p className="text-white text-center">No Saved Content</p>
+    <div className="flex justify-center items-center h-[70vh] text-gray-400 text-xl">
+      No Saved Content
     </div>
   ) : (
     <div className="px-6 py-4 min-h-screen mt-[50px] lg:mt-[20px]">

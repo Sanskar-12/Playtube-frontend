@@ -169,7 +169,7 @@ const Home = () => {
             selected={selectedItem === "Playlists"}
             onClick={() => {
               setSelectedItem("Playlists");
-              // navigate("/saveplaylist");
+              navigate("/savedplaylist");
             }}
           />
           <SidebarItem

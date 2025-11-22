@@ -96,8 +96,8 @@ const LikedContent = () => {
   }, [allVideosData]);
 
   return likedShorts.length === 0 && likedVideos.length === 0 ? (
-    <div className="flex justify-center items-center min-h-screen">
-      <p className="text-white text-center">No Liked Content</p>
+    <div className="flex justify-center items-center h-[70vh] text-gray-400 text-xl">
+      No Liked Content
     </div>
   ) : (
     <div className="px-6 py-4 min-h-screen mt-[50px] lg:mt-[20px]">

@@ -136,7 +136,7 @@ const MobileProfile = () => {
         <ProfileMenuItem
           icon={<FaList />}
           text="Playlists"
-          onClick={() => navigate("/saveplaylist")}
+          onClick={() => navigate("/savedplaylist")}
         />
         <ProfileMenuItem
           icon={<FaClock />}
