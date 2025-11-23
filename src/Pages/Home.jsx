@@ -142,7 +142,7 @@ const Home = () => {
             selected={selectedItem === "Subscriptions"}
             onClick={() => {
               setSelectedItem("Subscriptions");
-              // navigate("/subscribepage");
+              navigate("/subscribedcontent");
             }}
           />
         </nav>
@@ -266,7 +266,7 @@ const Home = () => {
           active={active === "Subscriptions"}
           onClick={() => {
             setActive("Subscriptions");
-            // navigate("/subscribepage");
+            navigate("/subscribedcontent");
           }}
           text="Subscriptions"
         />

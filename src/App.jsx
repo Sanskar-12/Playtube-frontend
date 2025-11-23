@@ -26,6 +26,7 @@ import LikedContent from "./Pages/LikedContent";
 import SavedContent from "./Pages/SavedContent";
 import SavedPlaylist from "./Pages/Playlist/SavedPlaylist";
 import useGetAllSubscribedContent from "./hooks/useGetAllSubscribedContent";
+import Subscription from "./Pages/Subscription";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -157,6 +158,14 @@ const App = () => {
             element={
               <ProtectRoute userData={user}>
                 <SavedContent />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/subscribedcontent"
+            element={
+              <ProtectRoute userData={user}>
+                <Subscription />
               </ProtectRoute>
             }
           />
