@@ -184,7 +184,7 @@ const PostCard = ({ post }) => {
                             className="w-6 h-6 rounded-full object-cover"
                           />
                           <h2 className="text-[13px]">
-                            @{reply?.author?.userName.toLowerCase()}
+                            @{reply?.author?.userName?.toLowerCase()}
                           </h2>
                           <p className="px-[20px] py-[20px]">
                             {reply?.message}

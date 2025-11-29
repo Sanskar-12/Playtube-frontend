@@ -18,7 +18,6 @@ const SavedPlaylist = () => {
           }
         );
 
-        console.log(data);
         setSavedPlaylist(data?.playlists);
       } catch (error) {
         console.log(error);
