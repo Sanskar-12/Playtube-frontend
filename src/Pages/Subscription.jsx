@@ -121,6 +121,7 @@ const Subscription = () => {
         </>
       )}
 
+      {/* Videos Section */}
       {subscribedVideos?.length > 0 && (
         <>
           <h2 className="text-2xl font-bold mb-6 pt-[50px] border-b border-gray-300 pb-2 flex items-center gap-2">
@@ -144,6 +145,7 @@ const Subscription = () => {
         </>
       )}
 
+      {/* Playlist Section */}
       {subscribedPlaylists?.length > 0 && (
         <>
           <h2 className="text-2xl font-bold mb-6 pt-[50px] border-b border-gray-300 pb-2 flex items-center gap-2">
@@ -164,6 +166,7 @@ const Subscription = () => {
         </>
       )}
 
+      {/* Post Section */}
       {subscribedPosts?.length > 0 && (
         <>
           <h2 className="text-2xl font-bold mb-6 pt-[50px] border-b border-gray-300 pb-2 flex items-center gap-2">

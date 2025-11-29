@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import Home from "./Pages/Home";
 import Signin from "./Pages/Signin";
 import Signup from "./Pages/Signup";
@@ -53,6 +53,11 @@ const App = () => {
   useGetAllChannelData();
   useGetAllContentData();
   useGetAllSubscribedContent();
+
+  const ChannelPageWrapper = () => {
+    const { id } = useParams();
+    return <ChannelPage key={id} />;
+  };
   return (
     <>
       <Routes>
@@ -85,7 +90,7 @@ const App = () => {
             path="/channel/:id"
             element={
               <ProtectRoute userData={user}>
-                <ChannelPage />
+                <ChannelPageWrapper />
               </ProtectRoute>
             }
           />

@@ -33,7 +33,7 @@ const Home = () => {
   const location = useLocation();
   const [popup, setPopup] = useState(false);
 
-  const { user } = useSelector((state) => state.user);
+  const { user, subscribedChannels } = useSelector((state) => state.user);
 
   return (
     <div className="bg-[#0f0f0f] text-white min-h-screen relative">
@@ -200,6 +200,32 @@ const Home = () => {
         )}
 
         {/* Subscriptions */}
+
+        <div className="space-y-1 mt-1">
+          {subscribedChannels?.map((ch) => (
+            <button
+              key={ch?._id}
+              onClick={() => {
+                setSelectedItem(ch?._id);
+                navigate(`/channel/${ch?._id}`);
+              }}
+              className={`flex items-center ${
+                sidebarOpen ? "gap-3 justify-start" : "justify-center"
+              } w-full text-left cursor-pointer p-2 rounded-lg transition ${
+                selectedItem === ch._id ? "bg-[#272727]" : "hover:bg-gray-800"
+              }`}
+            >
+              <img
+                src={ch?.avatar}
+                alt="Avatar"
+                className="w-6 h-6 rounded-full border border-gray-700 object-cover hover:scale-110 transition-transform duration-200"
+              />
+              {sidebarOpen && (
+                <span className="text-sm text-white truncate">{ch?.name}</span>
+              )}
+            </button>
+          ))}
+        </div>
       </aside>
 
       {/* Main area */}
