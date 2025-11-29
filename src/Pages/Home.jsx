@@ -7,7 +7,6 @@ import {
   FaThumbsUp,
   FaSearch,
   FaMicrophone,
-  FaTimes,
 } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 import { GoVideo } from "react-icons/go";
@@ -159,7 +158,7 @@ const Home = () => {
             selected={selectedItem === "History"}
             onClick={() => {
               setSelectedItem("History");
-              // navigate("/history");
+              navigate("/history");
             }}
           />
           <SidebarItem

@@ -27,6 +27,8 @@ import SavedContent from "./Pages/SavedContent";
 import SavedPlaylist from "./Pages/Playlist/SavedPlaylist";
 import useGetAllSubscribedContent from "./hooks/useGetAllSubscribedContent";
 import Subscription from "./Pages/Subscription";
+import HistoryPage from "./Pages/History/HistoryPage";
+import useGetHistory from "./hooks/useGetHistory";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -53,6 +55,7 @@ const App = () => {
   useGetAllChannelData();
   useGetAllContentData();
   useGetAllSubscribedContent();
+  useGetHistory();
 
   const ChannelPageWrapper = () => {
     const { id } = useParams();
@@ -179,6 +182,14 @@ const App = () => {
             element={
               <ProtectRoute userData={user}>
                 <SavedPlaylist />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              <ProtectRoute userData={user}>
+                <HistoryPage />
               </ProtectRoute>
             }
           />
