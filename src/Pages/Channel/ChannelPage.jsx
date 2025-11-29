@@ -38,7 +38,7 @@ const ChannelPage = () => {
   const { id } = useParams();
   const { user, allChannelData } = useSelector((state) => state.user);
   const { allVideosData } = useSelector((state) => state.content);
-  const channel = allChannelData.find((channel) => channel?._id === id);
+  const channel = allChannelData?.find((channel) => channel?._id === id);
 
   const [channelData, setChannelData] = useState(channel);
   const [isSubscribed, setIsSubscribed] = useState(

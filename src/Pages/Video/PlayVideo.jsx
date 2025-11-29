@@ -343,6 +343,26 @@ const PlayVideo = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, video?._id]);
 
+  useEffect(() => {
+    const addHistory = async () => {
+      try {
+        await axios.post(
+          `${serverUrl}/api/v1/add/history`,
+          {
+            contentId: video?._id,
+            contentType: "Video",
+          },
+          {
+            withCredentials: true,
+          }
+        );
+      } catch (error) {
+        console.log("Error adding history: ", error);
+      }
+    };
+    addHistory();
+  }, [video?._id]);
+
   return (
     <div className="flex bg-[#0f0f0f] text-white flex-col lg:flex-row gap-6 p-4 lg:p-6">
       {/* Left Side */}

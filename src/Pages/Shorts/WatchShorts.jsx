@@ -37,6 +37,7 @@ const WatchShorts = () => {
   const [replyLoading, setReplyLoading] = useState(false);
   const [newComments, setNewComments] = useState("");
   const [comments, setComments] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
   const videoRefs = useRef([]);
   const selectedShort = allShortsData?.find((s) => s._id === id);
 
@@ -310,10 +311,10 @@ const WatchShorts = () => {
             // play current video
             short.play();
             short.muted = false;
+            setActiveIndex(index);
 
             const currentShort = shortList[index];
             handleView(currentShort?._id);
-
             setComments(currentShort?.comments);
           } else {
             // pause other videos
@@ -352,7 +353,32 @@ const WatchShorts = () => {
     } else {
       setShortList(allShortsData);
     }
-  }, [selectedShort, allShortsData]);
+  }, [selectedShort, allShortsData, id]);
+
+  useEffect(() => {
+    const handleAddHistory = async () => {
+      try {
+        const short = videoRefs.current[activeIndex];
+        const id = short?._id;
+        if (!id) return;
+        const { data } = await axios.post(
+          `${serverUrl}/api/v1/add/history`,
+          {
+            contentId: id,
+            contentType: "Shorts",
+          },
+          {
+            withCredentials: true,
+          }
+        );
+
+        console.log(data);
+      } catch (error) {
+        console.log("Error adding history: ", error);
+      }
+    };
+    if (shortList.length > 0) handleAddHistory();
+  }, [activeIndex, shortList]);
 
   return (
     <div className="h-[100vh] w-full overflow-y-scroll snap-y snap-mandatory">
