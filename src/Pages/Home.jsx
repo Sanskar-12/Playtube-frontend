@@ -7,13 +7,14 @@ import {
   FaThumbsUp,
   FaSearch,
   FaMicrophone,
+  FaTimes,
 } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 import { GoVideo } from "react-icons/go";
 import { SiYoutubeshorts } from "react-icons/si";
 import { MdOutlineSubscriptions } from "react-icons/md";
 import logo from "../assets/playtube1.png";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import SidebarItem from "../components/sidebarItem";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import MobileNav from "../components/MobileNav";
@@ -22,6 +23,9 @@ import { useSelector } from "react-redux";
 import Profile from "../components/Profile";
 import AllVideosPage from "../components/AllVideosPage";
 import AllShortsPage from "../components/AllShortsPage";
+import axios from "axios";
+import { serverUrl } from "../App";
+import { ClipLoader } from "react-spinners";
 
 const Home = () => {
   const [input, setInput] = useState("");
@@ -31,11 +35,153 @@ const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [popup, setPopup] = useState(false);
+  const [searchPopup, setSearchPopup] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [text, setText] = useState("");
+  const [searchData, setSearchData] = useState({});
+  const recognitionRef = useRef(null);
 
   const { user, subscribedChannels } = useSelector((state) => state.user);
 
+  const speak = (message) => {
+    let utterance = new SpeechSynthesisUtterance(message);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const toggleListening = async () => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!recognitionRef.current) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = "en-US";
+
+      recognitionRef.current.onresult = (e) => {
+        let transcript = "";
+        for (let i = 0; i < e.results.length; i++) {
+          transcript += e.results[i][0].transcript;
+        }
+        setText(transcript);
+      };
+    }
+
+    if (listening) {
+      recognitionRef.current.stop();
+      setListening(false);
+      await handleSearchData(text);
+    } else {
+      recognitionRef.current.start();
+      setListening(true);
+    }
+  };
+
+  const handleSearchData = async (text) => {
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/v1/search`,
+        { input: text },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setText("");
+      setInput("");
+      setSearchPopup(false);
+      setSearchData(data);
+
+      const { videos = [], shorts = [], playlists = [], channels = [] } = data;
+
+      if (
+        videos.length > 0 ||
+        shorts.length > 0 ||
+        playlists.length > 0 ||
+        channels.length > 0
+      ) {
+        speak("These are the top search results I found for you");
+      } else {
+        speak("No results found");
+      }
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-[#0f0f0f] text-white min-h-screen relative">
+      {searchPopup && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 animate-fadeIn">
+          <div className="bg-[#1f1f1f]/90 backdrop-blur-md rounded-2xl shadow-2xl w-[90%] max-w-md min-h-[400px] sm:min-h-[480px] p-8 flex flex-col items-center justify-between gap-8 relative border border-gray-700 transition-all duration-300">
+            <button
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition"
+              onClick={() => setSearchPopup(!searchPopup)}
+            >
+              <FaTimes size={22} />
+            </button>
+
+            <div className="flex flex-col items-center gap-3">
+              {listening ? (
+                <h1 className="text-xl sm:text-2xl font-semibold text-orange-400 animate-pulse">
+                  Listening...
+                </h1>
+              ) : (
+                <h1 className="text-lg sm:text-xl font-medium text-gray-300">
+                  Speak or type your query
+                </h1>
+              )}
+              <div className="flex w-full gap-2 md:hidden mt-4">
+                <input
+                  type="text"
+                  className="flex-1 px-4 py-2 rounded-full bg-[#2a2a2a] text-white outline-none border border-gray-600 focus:border-orange-400 focus:ring-2 focus:ring-orange-500 transition"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                />
+                <button
+                  className="bg-red-500 hover:bg-orange-600 px-4 py-2 rounded-full text-white font-semibold shadow-md transition disabled:opacity-50"
+                  onClick={() => handleSearchData(input)}
+                >
+                  {loading ? (
+                    <ClipLoader size={24} color="white" />
+                  ) : (
+                    <FaSearch />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {text && (
+              <span className="text-center text-lg sm:text-xl text-gray-200 px-4 py-2 rounded-lg bg-[#2a2a2a]/60">
+                {text}
+              </span>
+            )}
+
+            <button
+              className={`p-6 rounded-full shadow-xl transition-all duration-300 transform hover:scale-110 ${
+                listening
+                  ? "bg-red-500 animate-pulse shadow-red-500/40"
+                  : "bg-orange-500 hover:bg-orange-600 shadow-orange-500/40"
+              }`}
+              onClick={toggleListening}
+              disabled={loading}
+            >
+              {loading ? (
+                <ClipLoader size={24} color="white" />
+              ) : (
+                <FaMicrophone className="w-8 h-8 text-white" />
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* header */}
       <header
         className="bg-[#0f0f0f] h-15 p-3 border-b
@@ -67,11 +213,21 @@ const Home = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
               />
-              <button className="bg-[#272727] px-4 rounded-r-full border border-gray-700">
-                <FaSearch />
+              <button
+                className="bg-[#272727] px-4 rounded-r-full border border-gray-700"
+                onClick={() => handleSearchData(input)}
+              >
+                {loading ? (
+                  <ClipLoader size={24} color="white" />
+                ) : (
+                  <FaSearch />
+                )}
               </button>
             </div>
-            <button className="bg-[#272727] p-3 rounded-full">
+            <button
+              className="bg-[#272727] p-3 rounded-full"
+              onClick={() => setSearchPopup(!searchPopup)}
+            >
               <FaMicrophone />
             </button>
           </div>
@@ -100,7 +256,10 @@ const Home = () => {
                 onClick={() => setPopup((prev) => !prev)}
               />
             )}
-            <FaSearch className="text-lg md:hidden flex" />
+            <FaSearch
+              className="text-lg md:hidden flex"
+              onClick={() => setSearchPopup(!searchPopup)}
+            />
           </div>
         </div>
       </header>

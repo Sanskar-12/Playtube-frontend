@@ -20,8 +20,6 @@ const useGetHistory = () => {
         const shorts = data?.history?.filter(
           (hist) => hist?.contentType === "Shorts"
         );
-        console.log(videos);
-        console.log(shorts);
 
         dispatch(setHistoryVideo(videos));
         dispatch(setHistoryShort(shorts));
