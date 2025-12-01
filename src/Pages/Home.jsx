@@ -26,6 +26,7 @@ import AllShortsPage from "../components/AllShortsPage";
 import axios from "axios";
 import { serverUrl } from "../App";
 import { ClipLoader } from "react-spinners";
+import SearchResults from "../components/SearchResults";
 
 const Home = () => {
   const [input, setInput] = useState("");
@@ -39,7 +40,7 @@ const Home = () => {
   const [listening, setListening] = useState(false);
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState("");
-  const [searchData, setSearchData] = useState({});
+  const [searchData, setSearchData] = useState(null);
   const recognitionRef = useRef(null);
 
   const { user, subscribedChannels } = useSelector((state) => state.user);
@@ -106,8 +107,6 @@ const Home = () => {
       } else {
         speak("No results found");
       }
-
-      console.log(data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -405,6 +404,7 @@ const Home = () => {
               ))}
             </div>
             <div className="mt-3">
+              {searchData && <SearchResults searchResults={searchData} />}
               <AllVideosPage />
               <AllShortsPage />
             </div>
