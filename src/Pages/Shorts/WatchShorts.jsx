@@ -361,7 +361,7 @@ const WatchShorts = () => {
         const short = videoRefs.current[activeIndex];
         const id = short?._id;
         if (!id) return;
-        const { data } = await axios.post(
+        await axios.post(
           `${serverUrl}/api/v1/add/history`,
           {
             contentId: id,
@@ -371,8 +371,6 @@ const WatchShorts = () => {
             withCredentials: true,
           }
         );
-
-        console.log(data);
       } catch (error) {
         console.log("Error adding history: ", error);
       }
