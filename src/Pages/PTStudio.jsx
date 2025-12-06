@@ -3,7 +3,12 @@ import { SiYoutubestudio } from "react-icons/si";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import Profile from "../components/Profile";
-import { FaChartBar, FaTachometerAlt, FaVideo } from "react-icons/fa";
+import {
+  FaChartBar,
+  FaPlusCircle,
+  FaTachometerAlt,
+  FaVideo,
+} from "react-icons/fa";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 
 const PTStudio = () => {
@@ -95,6 +100,50 @@ const PTStudio = () => {
           </div>
         </main>
       </div>
+
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0f0f0f] border-t border-gray-800 flex justify-around py-2 z-50">
+        <MobileNavItem
+          icon={<FaTachometerAlt />}
+          text={"Dashboard"}
+          active={active}
+          onClick={() => {
+            setActive("Dashboard");
+            navigate("/ptstudio/dashboard");
+          }}
+        />
+        <MobileNavItem
+          icon={<FaVideo />}
+          text={"Content"}
+          active={active}
+          onClick={() => {
+            setActive("Content");
+            navigate("/ptstudio/content");
+          }}
+        />
+        <MobileNavItem
+          icon={<FaPlusCircle />}
+          text={"Create"}
+          onClick={() => navigate("/create")}
+        />
+        <MobileNavItem
+          icon={<FaChartBar />}
+          text={"Analytics"}
+          active={active}
+          onClick={() => {
+            setActive("Analytics");
+            navigate("/ptstudio/analytics");
+          }}
+        />
+        <MobileNavItem
+          icon={<RiMoneyRupeeCircleFill className="w-6 h-6" />}
+          text={"Revenue"}
+          active={active}
+          onClick={() => {
+            setActive("Revenue");
+            navigate("/ptstudio/revenue");
+          }}
+        />
+      </nav>
     </div>
   );
 };
