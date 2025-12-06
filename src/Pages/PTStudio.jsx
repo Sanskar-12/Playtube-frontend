@@ -92,7 +92,7 @@ const PTStudio = () => {
 
         {/* Main Section */}
         <main className="flex-1 p-4 sm:p-6 pb-20 md:pb-6">
-          <div className="border border-gray-700 rounded-lg p-4 sm:p-6 text-center text-gray-400 bg-[#181818] shadow-inner min-h-[70vh]">
+          <div className="border border-gray-700 rounded-lg p-4 sm:p-6 text-center text-gray-400 bg-[#181818] shadow-inner min-h-[100vh]">
             {open && <Profile />}
             <div className="mt-4">
               <Outlet />

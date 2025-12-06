@@ -17,8 +17,6 @@ const useGetRecommendedContent = () => {
           }
         );
 
-        console.log(data);
-
         dispatch(setRecommendedContent(data));
       } catch (error) {
         console.log(error);
