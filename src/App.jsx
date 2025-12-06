@@ -29,6 +29,7 @@ import useGetAllSubscribedContent from "./hooks/useGetAllSubscribedContent";
 import Subscription from "./Pages/Subscription";
 import HistoryPage from "./Pages/History/HistoryPage";
 import useGetHistory from "./hooks/useGetHistory";
+import useGetRecommendedContent from "./hooks/useGetRecommendedContent";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -56,6 +57,7 @@ const App = () => {
   useGetAllContentData();
   useGetAllSubscribedContent();
   useGetHistory();
+  useGetRecommendedContent();
 
   const ChannelPageWrapper = () => {
     const { id } = useParams();
