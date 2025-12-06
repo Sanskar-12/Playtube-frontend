@@ -28,6 +28,7 @@ import { serverUrl } from "../App";
 import { ClipLoader } from "react-spinners";
 import SearchResults from "../components/SearchResults";
 import FilterResults from "../components/FilterResults";
+import RecommendedContent from "./RecommendedContent";
 
 const Home = () => {
   const [input, setInput] = useState("");
@@ -471,8 +472,14 @@ const Home = () => {
               )}
               {searchData && <SearchResults searchResults={searchData} />}
               {filterData && <FilterResults filterResults={filterData} />}
-              <AllVideosPage />
-              <AllShortsPage />
+              {user ? (
+                <RecommendedContent />
+              ) : (
+                <>
+                  <AllVideosPage />
+                  <AllShortsPage />
+                </>
+              )}
             </div>
           </>
         )}

@@ -1,8 +1,6 @@
 import { useSelector } from "react-redux";
-import ChannelCard from "./ChannelCard";
 import VideoCard from "./VideoCard";
 import { useEffect, useState } from "react";
-import PlaylistCard from "./PlaylistCard";
 import ShortCard from "./ShortCard";
 
 // Helper to get duration
