@@ -27,6 +27,7 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { ClipLoader } from "react-spinners";
 import SearchResults from "../components/SearchResults";
+import FilterResults from "../components/FilterResults";
 
 const Home = () => {
   const [input, setInput] = useState("");
@@ -39,6 +40,8 @@ const Home = () => {
   const [searchPopup, setSearchPopup] = useState(false);
   const [listening, setListening] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [filterLoading, setFilterLoading] = useState(false);
+  const [filterData, setFilterData] = useState(null);
   const [text, setText] = useState("");
   const [searchData, setSearchData] = useState(null);
   const recognitionRef = useRef(null);
@@ -111,6 +114,62 @@ const Home = () => {
       console.log(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCategoryFilterWithAi = async (category) => {
+    setFilterLoading(true);
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/v1/filter/category`,
+        { input: category },
+        {
+          withCredentials: true,
+        }
+      );
+
+      const { videos = [], shorts = [], channels = [] } = result.data;
+
+      let channelVideos = [];
+      let channelShorts = [];
+
+      channels.forEach((ch) => {
+        if (ch?.videos.length > 0) {
+          channelVideos.push(...ch.videos);
+        }
+        if (ch?.shorts?.length > 0) {
+          channelShorts.push(...ch.shorts);
+        }
+      });
+
+      setFilterData({
+        ...result.data,
+        videos: [...videos, ...channelVideos],
+        shorts: [...shorts, ...channelShorts],
+      });
+
+      navigate("/");
+
+      console.log("Category filter merged:", {
+        ...result.data,
+        videos: [...videos, ...channelVideos],
+        shorts: [...shorts, ...channelShorts],
+      });
+
+      if (
+        videos.length > 0 ||
+        shorts.length > 0 ||
+        channelVideos.length > 0 ||
+        channelShorts.length > 0
+      ) {
+        speak(`Here are some ${category} videos and shorts for you`);
+      } else {
+        speak("No results found");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setFilterLoading(false);
     }
   };
 
@@ -398,13 +457,20 @@ const Home = () => {
                 <button
                   key={index}
                   className="whitespace-nowrap bg-[#272727] px-4 py-1 rounded-lg text-sm hover:bg-gray-700"
+                  onClick={() => handleCategoryFilterWithAi(category)}
                 >
                   {category}
                 </button>
               ))}
             </div>
             <div className="mt-3">
+              {filterLoading && (
+                <div className="w-full flex justify-center">
+                  {filterLoading ? <ClipLoader size={35} color="white" /> : ""}
+                </div>
+              )}
               {searchData && <SearchResults searchResults={searchData} />}
+              {filterData && <FilterResults filterResults={filterData} />}
               <AllVideosPage />
               <AllShortsPage />
             </div>
