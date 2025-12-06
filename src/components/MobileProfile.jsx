@@ -152,7 +152,7 @@ const MobileProfile = () => {
           <ProfileMenuItem
             icon={<SiYoutubestudio className="w-5 h-5 text-orange-400" />}
             text="PT Studio"
-            onClick={() => navigate("/ptstudio/dashboard")}
+            onClick={() => navigate("/ptstudio")}
           />
         )}
       </div>

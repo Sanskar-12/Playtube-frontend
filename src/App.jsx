@@ -30,6 +30,7 @@ import Subscription from "./Pages/Subscription";
 import HistoryPage from "./Pages/History/HistoryPage";
 import useGetHistory from "./hooks/useGetHistory";
 import useGetRecommendedContent from "./hooks/useGetRecommendedContent";
+import PTStudio from "./Pages/PTStudio";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -236,6 +237,16 @@ const App = () => {
             </ProtectRoute>
           }
         />
+
+        {/* PTStudio Routes */}
+        <Route
+          path="/ptstudio"
+          element={
+            <ProtectRoute userData={user}>
+              <PTStudio />
+            </ProtectRoute>
+          }
+        ></Route>
       </Routes>
       <Toaster />
     </>
