@@ -44,7 +44,10 @@ const ViewChannel = () => {
               Customise Channel
             </button>
 
-            <button className="bg-[#272727] px-4 py-1 rounded-full font-medium cursor-pointer active:bg-gray-200 active:text-black">
+            <button
+              className="bg-[#272727] px-4 py-1 rounded-full font-medium cursor-pointer active:bg-gray-200 active:text-black"
+              onClick={() => navigate("/ptstudio/dashboard")}
+            >
               Manage Videos
             </button>
           </div>

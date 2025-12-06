@@ -31,6 +31,10 @@ import HistoryPage from "./Pages/History/HistoryPage";
 import useGetHistory from "./hooks/useGetHistory";
 import useGetRecommendedContent from "./hooks/useGetRecommendedContent";
 import PTStudio from "./Pages/PTStudio";
+import Dashboard from "./components/Dashboard";
+import Content from "./components/Content";
+import Analytics from "./components/Analytics";
+import Revenue from "./components/Revenue";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -246,7 +250,40 @@ const App = () => {
               <PTStudio />
             </ProtectRoute>
           }
-        ></Route>
+        >
+          <Route
+            path="/ptstudio/dashboard"
+            element={
+              <ProtectRoute userData={user}>
+                <Dashboard />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/ptstudio/content"
+            element={
+              <ProtectRoute userData={user}>
+                <Content />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/ptstudio/analytics"
+            element={
+              <ProtectRoute userData={user}>
+                <Analytics />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/ptstudio/revenue"
+            element={
+              <ProtectRoute userData={user}>
+                <Revenue />
+              </ProtectRoute>
+            }
+          />
+        </Route>
       </Routes>
       <Toaster />
     </>
