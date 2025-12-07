@@ -5,6 +5,7 @@ const contentSlice = createSlice({
   initialState: {
     allVideosData: [],
     allShortsData: [],
+    contentRevenue: null,
   },
   reducers: {
     setAllVideosData: (state, action) => {
@@ -13,9 +14,13 @@ const contentSlice = createSlice({
     setAllShortsData: (state, action) => {
       state.allShortsData = action.payload;
     },
+    setContentRevenueData: (state, action) => {
+      state.contentRevenue = action.payload;
+    },
   },
 });
 
-export const { setAllVideosData, setAllShortsData } = contentSlice.actions;
+export const { setAllVideosData, setAllShortsData, setContentRevenueData } =
+  contentSlice.actions;
 
 export default contentSlice.reducer;
