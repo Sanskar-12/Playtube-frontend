@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -246,6 +247,80 @@ const Content = () => {
                       className="cursor-pointer hover:text-blue-400"
                       onClick={() =>
                         navigate(`/ptstudio/manageplaylist/${p?._id}`)
+                      }
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Community Section */}
+        {activeTab === "Community" && (
+          <div>
+            <div className="hidden md:block overflow-x-auto">
+              <table className="min-w-full border border-gray-700 rounded-lg">
+                <thead className="bg-gray-800 text-sm">
+                  <tr>
+                    <th className="p-3 text-left">Image</th>
+                    <th className="p-3 text-left">Post</th>
+                    <th className="p-3 text-left">Date</th>
+                    <th className="p-3 text-left">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {channelData?.communityPosts?.map((c) => (
+                    <tr
+                      key={c?._id}
+                      className="border-t border-gray-700 hover:bg-gray-800/40"
+                    >
+                      <td className="p-3">
+                        <img
+                          src={c?.image}
+                          alt="Image"
+                          className="w-20 h-1/2 rounded object-cover"
+                        />
+                      </td>
+                      <td className="text-start p-3">{c?.content}</td>
+                      <td className="text-start p-3">
+                        {new Date(c.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="p-3">
+                        <MdDelete
+                          size={20}
+                          className="cursor-pointer hover:text-orange-400"
+                          onClick={() =>
+                            navigate(`/ptstudio/managecommunity/${c?._id}`)
+                          }
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="grid gap-4 md:hidden">
+              {channelData?.communityPosts?.map((c) => (
+                <div
+                  key={c?._id}
+                  className="bg-[#1c1c1c] rounded-xl shadow hover:shadow-lg transition overflow-hidden flex flex-col border"
+                >
+                  <img
+                    src={c?.image}
+                    alt={c?.content}
+                    className="w-full h-40 object-cover"
+                  />
+                  <div className="flex-1 p-4">
+                    <h3 className="text-base font-semibold">{c?.content}</h3>
+                  </div>
+                  <div className="px-4 py-3 border-t border-gray-700 flex items-center justify-between text-sm text-gray-400">
+                    <span> {new Date(c.createdAt).toLocaleDateString()}</span>
+                    <MdDelete
+                      className="cursor-pointer hover:text-blue-400"
+                      onClick={() =>
+                        navigate(`/ptstudio/managecommunity/${c?._id}`)
                       }
                     />
                   </div>
