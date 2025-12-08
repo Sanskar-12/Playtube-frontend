@@ -67,7 +67,7 @@ const Content = () => {
                         <FaEdit
                           className="cursor-pointer hover:text-orange-400"
                           onClick={() =>
-                            navigate(`/ptstudio/managevideo/${v?._id}`)
+                            navigate(`/ptstudio/updatevideo/${v?._id}`)
                           }
                         />
                       </td>
@@ -96,7 +96,7 @@ const Content = () => {
                     <FaEdit
                       className="cursor-pointer hover:text-blue-400"
                       onClick={() =>
-                        navigate(`/ptstudio/managevideo/${v?._id}`)
+                        navigate(`/ptstudio/updatevideo/${v?._id}`)
                       }
                     />
                   </div>
