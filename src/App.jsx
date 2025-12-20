@@ -37,6 +37,7 @@ import Analytics from "./components/Analytics";
 import Revenue from "./components/Revenue";
 import UpdateVideo from "./Pages/Video/UpdateVideo";
 import UpdateShort from "./Pages/Shorts/UpdateShort";
+import UpdatePlaylist from "./Pages/Playlist/UpdatePlaylist";
 
 export const serverUrl = "http://localhost:4000";
 
@@ -298,6 +299,14 @@ const App = () => {
             element={
               <ProtectRoute userData={user}>
                 <UpdateShort />
+              </ProtectRoute>
+            }
+          />
+          <Route
+            path="/ptstudio/updateplaylist/:playlistId"
+            element={
+              <ProtectRoute userData={user}>
+                <UpdatePlaylist />
               </ProtectRoute>
             }
           />

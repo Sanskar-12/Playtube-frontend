@@ -10,6 +10,8 @@ const Content = () => {
 
   const [activeTab, setActiveTab] = useState("Videos");
 
+  console.log(channelData);
+
   return (
     <div className="text-white min-h-screen pt-5 px-4 sm:px-6 mb-16">
       <div className="flex flex-wrap gap-6 border-b border-gray-800 mb-6">
@@ -215,7 +217,7 @@ const Content = () => {
                         <FaEdit
                           className="cursor-pointer hover:text-orange-400"
                           onClick={() =>
-                            navigate(`/ptstudio/manageplaylist/${p?._id}`)
+                            navigate(`/ptstudio/updateplaylist/${p?._id}`)
                           }
                         />
                       </td>
@@ -244,7 +246,7 @@ const Content = () => {
                     <FaEdit
                       className="cursor-pointer hover:text-blue-400"
                       onClick={() =>
-                        navigate(`/ptstudio/manageplaylist/${p?._id}`)
+                        navigate(`/ptstudio/updateplaylist/${p?._id}`)
                       }
                     />
                   </div>
