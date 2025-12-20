@@ -8,8 +8,6 @@ const Content = () => {
   const { channelData } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  console.log(channelData);
-
   const [activeTab, setActiveTab] = useState("Videos");
 
   return (
@@ -141,7 +139,7 @@ const Content = () => {
                         <FaEdit
                           className="cursor-pointer hover:text-orange-400"
                           onClick={() =>
-                            navigate(`/ptstudio/manageshort/${s?._id}`)
+                            navigate(`/ptstudio/updateshort/${s?._id}`)
                           }
                         />
                       </td>
@@ -173,7 +171,7 @@ const Content = () => {
                     <FaEdit
                       className="cursor-pointer hover:text-blue-400"
                       onClick={() =>
-                        navigate(`/ptstudio/manageshort/${s?._id}`)
+                        navigate(`/ptstudio/updateshort/${s?._id}`)
                       }
                     />
                   </div>

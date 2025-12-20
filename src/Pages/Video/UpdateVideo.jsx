@@ -135,7 +135,7 @@ const UpdateVideo = () => {
           {/* Title */}
           <input
             type="text"
-            placeholder="Title (required)"
+            placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full p-3 rounded-lg bg-[#121212] border border-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
