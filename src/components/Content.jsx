@@ -1,16 +1,43 @@
+import axios from "axios";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { serverUrl } from "../App";
+import { setChannelData } from "../redux/reducers/userSlice";
 
 const Content = () => {
   const { channelData } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [activeTab, setActiveTab] = useState("Videos");
 
-  console.log(channelData);
+  const handleDeletePost = async (postId) => {
+    try {
+      await axios.delete(`${serverUrl}/api/v1/delete/post/${postId}`, {
+        withCredentials: true,
+      });
+
+      const updatedPosts = channelData?.communityPosts?.filter(
+        (post) => post?._id !== postId
+      );
+
+      dispatch(
+        setChannelData({
+          ...channelData,
+          communityPosts: updatedPosts,
+        })
+      );
+
+      toast.success("Post Deleted Successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Error Deleting Post");
+    }
+  };
 
   return (
     <div className="text-white min-h-screen pt-5 px-4 sm:px-6 mb-16">
@@ -290,9 +317,10 @@ const Content = () => {
                         <MdDelete
                           size={20}
                           className="cursor-pointer hover:text-orange-400"
-                          onClick={() =>
-                            navigate(`/ptstudio/managecommunity/${c?._id}`)
-                          }
+                          onClick={() => {
+                            handleDeletePost(c?._id);
+                            navigate(`/ptstudio/dashboard`);
+                          }}
                         />
                       </td>
                     </tr>
@@ -319,9 +347,10 @@ const Content = () => {
                     <span> {new Date(c.createdAt).toLocaleDateString()}</span>
                     <MdDelete
                       className="cursor-pointer hover:text-blue-400"
-                      onClick={() =>
-                        navigate(`/ptstudio/managecommunity/${c?._id}`)
-                      }
+                      onClick={() => {
+                        handleDeletePost(c?._id);
+                        navigate(`/ptstudio/dashboard`);
+                      }}
                     />
                   </div>
                 </div>

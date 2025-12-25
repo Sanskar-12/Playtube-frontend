@@ -325,7 +325,7 @@ const Home = () => {
 
       {/* sidebar */}
       <aside
-        className={`bg-[#0f0f0f] border-r border-gray-800 transition-all duration-300 fixed top-[60px] bottom-0 z-40
+        className={`bg-[#0f0f0f] border-r border-gray-800 transition-all duration-300 fixed top-[60px] ml-2 bottom-0 z-40
           ${
             sidebarOpen ? "w-60" : "w-20"
           } hidden md:flex flex-col overflow-y-auto`}
