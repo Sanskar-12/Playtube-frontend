@@ -15,7 +15,7 @@ import { SiYoutubeshorts } from "react-icons/si";
 import { MdOutlineSubscriptions } from "react-icons/md";
 import logo from "../assets/playtube1.png";
 import { useRef, useState } from "react";
-import SidebarItem from "../components/sidebarItem";
+import SidebarItem from "../components/SidebarItem";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import MobileNav from "../components/MobileNav";
 import { categories } from "../utils";
