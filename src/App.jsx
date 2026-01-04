@@ -39,7 +39,7 @@ import UpdateVideo from "./Pages/Video/UpdateVideo";
 import UpdateShort from "./Pages/Shorts/UpdateShort";
 import UpdatePlaylist from "./Pages/Playlist/UpdatePlaylist";
 
-export const serverUrl = "http://localhost:4000";
+export const serverUrl = "https://playtube-backend-jz1j.onrender.com";
 
 const ProtectRoute = ({ userData, children }) => {
   if (!userData) {
